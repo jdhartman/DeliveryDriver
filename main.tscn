@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://isometric_car.tscn" type="PackedScene" id=1]
+[ext_resource path="res://isometric_camera.tscn" type="PackedScene" id=2]
+[ext_resource path="res://map/neighborhood1.tscn" type="PackedScene" id=3]
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Spatial" parent="." instance=ExtResource( 3 )]
+map_size = 6
+tile_size = 48
+
+[node name="Camera" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.936779, -0.331514, 0.111998, 0.0163651, 0.361221, 0.932337, -0.349539, -0.87156, 0.34381, 3.35296, 28.0554, 12.5383 )
+projection = 0
+fov = 61.1
+
+[node name="Car" parent="." instance=ExtResource( 1 )]
+engine_power = 15.0
+slip_speed = 20.0
