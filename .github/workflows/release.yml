@@ -30,7 +30,7 @@ jobs:
           echo ::set-output name=tag::${GITHUB_REF#refs/*/}]
       - name: Test tag
         run: |
-          echo  ${{ steps.tag_version.outputs.tag }}
+          echo  $GITHUB_REF
       - name: Godot Export
         # You may pin to the exact commit or the version.
         # uses: firebelley/godot-export@1e28506c4afa5c7c33c7da60f87b71ccacf4a405
