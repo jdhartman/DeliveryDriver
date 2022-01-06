@@ -54,3 +54,5 @@ jobs:
           #wine_path: # optional, default is 
           # If should export with debugging tools.
           #export_debug: # optional
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
