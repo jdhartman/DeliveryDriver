@@ -10,3 +10,4 @@ project.godot
 
 # Mono-specific ignores
 .mono/
+/exports

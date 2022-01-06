@@ -119,3 +119,7 @@ shape = SubResource( 7 )
 [node name="Camera" type="Camera" parent="Driver/Camera"]
 transform = Transform( 1, 0, 0, 0, 0.917651, 0.397388, 0, -0.397388, 0.917651, 0, 8.50719, 9.89325 )
 script = ExtResource( 2 )
+min_distance = null
+max_distance = null
+angle_v_adjust = null
+height = null
