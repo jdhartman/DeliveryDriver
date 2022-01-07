@@ -5,7 +5,6 @@ export.cfg
 
 default_env.tres
 icon.png
-project.godot
 
 # Mono-specific ignores
 .mono/
