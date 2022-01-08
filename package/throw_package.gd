@@ -1,4 +1,4 @@
-extends "res://isometric_car.gd"
+extends "res://car/car.gd"
 
 export (PackedScene) var package_scene
 # Declare member variables here. Examples:

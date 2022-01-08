@@ -3,7 +3,8 @@
 *.import
 export.cfg
 
-default_env.tres
+.vscode/
+
 icon.png
 
 # Mono-specific ignores

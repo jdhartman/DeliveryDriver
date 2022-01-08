@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://isometric_camera.gd" type="Script" id=1]
+[ext_resource path="res://camera/camera.gd" type="Script" id=1]
 
 [node name="Camera" type="Camera"]
 transform = Transform( 0.874636, -0.186439, 0.447495, 0.0199426, 0.936146, 0.351046, -0.48437, -0.298113, 0.822505, 4.93022, 10.3509, 10.5177 )
