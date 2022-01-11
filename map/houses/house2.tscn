@@ -3,16 +3,16 @@
 [ext_resource path="res://package/house_delivery_zone.tscn" type="PackedScene" id=1]
 
 [sub_resource type="SpatialMaterial" id=1]
-albedo_color = Color( 0.545098, 0.937255, 0.901961, 1 )
+albedo_color = Color( 0.972549, 1, 0.596078, 1 )
 
 [node name="Spatial" type="Spatial"]
 
 [node name="CSGBox" type="CSGBox" parent="."]
-transform = Transform( 2.2, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0 )
+transform = Transform( 1.9, 0, 0, 0, 1.7, 0, 0, 0, 1, 0, 2, 0 )
 material = SubResource( 1 )
 
 [node name="CSGBox2" type="CSGBox" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1 )
 
 [node name="DeliveryZone" parent="." instance=ExtResource( 1 )]
-transform = Transform( 3, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0, 5.50866 )
+transform = Transform( 3, 0, 0, 0, 0.1, 0, 0, 0, 3, 0, 0, 5.55719 )

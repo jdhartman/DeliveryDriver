@@ -59,6 +59,13 @@ throw_right={
  ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="environment"
+3d_physics/layer_2="player"
+3d_physics/layer_3="delivery_zones"
+3d_physics/layer_4="packages"
+
 [physics]
 
 common/enable_pause_aware_picking=true
