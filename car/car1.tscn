@@ -16,6 +16,7 @@ albedo_color = Color( 1, 0, 0, 0.34902 )
 
 [node name="Car" type="KinematicBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.837199, 0 )
+collision_layer = 2
 script = ExtResource( 1 )
 engine_power = 15.0
 friction = -5.0

@@ -7,6 +7,7 @@
 [node name="Spatial" type="Spatial"]
 
 [node name="Spatial" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0354681, -0.0181942, -0.0412941 )
 map_size = 6
 tile_size = 48
 
