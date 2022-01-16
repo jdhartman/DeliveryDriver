@@ -1,15 +1,22 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://car/car1.tscn" type="PackedScene" id=1]
 [ext_resource path="res://camera/camera.tscn" type="PackedScene" id=2]
 [ext_resource path="res://map/neighborhood1.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ui/ui_controller.gd" type="Script" id=4]
+[ext_resource path="res://package/delivery_tracker.gd" type="Script" id=5]
+[ext_resource path="res://addons/godot-gif-getter/GifGetterUI.tscn" type="PackedScene" id=6]
 
 [node name="Spatial" type="Spatial"]
 
-[node name="Spatial" parent="." instance=ExtResource( 3 )]
+[node name="MapGeneration" parent="." instance=ExtResource( 3 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0354681, -0.0181942, -0.0412941 )
 map_size = 6
 tile_size = 48
+
+[node name="DeliveryTracker" type="Spatial" parent="."]
+script = ExtResource( 5 )
+total = 50
 
 [node name="Car" parent="." instance=ExtResource( 1 )]
 
@@ -17,3 +24,32 @@ tile_size = 48
 transform = Transform( 0.936779, -0.331514, 0.111998, 0.0163651, 0.361221, 0.932337, -0.349539, -0.87156, 0.34381, 3.35296, 28.0554, 12.5383 )
 projection = 0
 fov = 61.1
+
+[node name="UIController" type="MarginContainer" parent="."]
+margin_left = 9.0
+margin_top = 1.0
+margin_right = 111.0
+margin_bottom = 41.0
+script = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UIController"]
+margin_right = 102.0
+margin_bottom = 40.0
+
+[node name="Label" type="Label" parent="UIController/HBoxContainer"]
+margin_top = 13.0
+margin_right = 69.0
+margin_bottom = 27.0
+text = "Deliveries "
+
+[node name="Label2" type="Label" parent="UIController/HBoxContainer"]
+margin_left = 73.0
+margin_top = 13.0
+margin_right = 102.0
+margin_bottom = 27.0
+text = "0/20"
+
+[node name="GifGetterUI" parent="." instance=ExtResource( 6 )]

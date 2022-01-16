@@ -6,6 +6,8 @@ onready var house1 = preload("res://map/houses/house1.tscn")
 onready var house2 = preload("res://map/houses/house2.tscn")
 onready var house3 = preload("res://map/houses/house3.tscn")
 
+onready var delivery_tracker = get_node("../DeliveryTracker")
+
 export var map_size = 2
 export var tile_size = 6
 
@@ -16,6 +18,7 @@ var road_grid = null
 
 var house_scenes = []
 var houses = []
+var delivery_zones = []
 
 var mid_matrix = []
 
@@ -37,7 +40,8 @@ func _ready():
 		for j in range(map_size):
 			add_tile(i, j)
 
-	calculate_roads()			
+	calculate_roads()
+	delivery_tracker.add_zones(houses)
 	
 	
 func add_tile(i, j):
@@ -140,8 +144,6 @@ func set_tile_roads(i, j):
 				randi() % house_scenes.size(),
 				location.z)
 
-	#print(houses)
-
 func isUp(m):
 	return  m == 0 || m == 3 || m == 4 || m == 6 || m == 7 || m == 8 || m == 9 || m == 10
 
@@ -166,3 +168,4 @@ func createHouse(x, z, house_index, angle):
 
 	add_child(house_instance)
 	houses.append(house_instance)
+		
