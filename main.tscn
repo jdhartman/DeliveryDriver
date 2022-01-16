@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://car/car1.tscn" type="PackedScene" id=1]
 [ext_resource path="res://camera/camera.tscn" type="PackedScene" id=2]
 [ext_resource path="res://map/neighborhood1.tscn" type="PackedScene" id=3]
 [ext_resource path="res://ui/ui_controller.gd" type="Script" id=4]
 [ext_resource path="res://package/delivery_tracker.gd" type="Script" id=5]
+[ext_resource path="res://addons/godot-gif-getter/GifGetterUI.tscn" type="PackedScene" id=6]
 
 [node name="Spatial" type="Spatial"]
 
@@ -25,8 +26,10 @@ projection = 0
 fov = 61.1
 
 [node name="UIController" type="MarginContainer" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+margin_left = 9.0
+margin_top = 1.0
+margin_right = 111.0
+margin_bottom = 41.0
 script = ExtResource( 4 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -48,3 +51,5 @@ margin_top = 13.0
 margin_right = 102.0
 margin_bottom = 27.0
 text = "0/20"
+
+[node name="GifGetterUI" parent="." instance=ExtResource( 6 )]

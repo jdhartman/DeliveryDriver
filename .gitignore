@@ -10,3 +10,4 @@ icon.png
 # Mono-specific ignores
 .mono/
 /exports
+rust/target/
