@@ -11,3 +11,5 @@ icon.png
 .mono/
 /exports
 rust/target/
+
+*.blend1
