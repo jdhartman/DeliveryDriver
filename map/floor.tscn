@@ -3,7 +3,7 @@
 [sub_resource type="BoxShape" id=1]
 
 [sub_resource type="SpatialMaterial" id=2]
-albedo_color = Color( 0.0117647, 0.219608, 0.027451, 1 )
+albedo_color = Color( 0.32549, 0.541176, 0.341176, 1 )
 metallic_specular = 0.42
 
 [node name="Spatial" type="Spatial"]
@@ -18,5 +18,4 @@ __meta__ = {
 shape = SubResource( 1 )
 
 [node name="CSGBox" type="CSGBox" parent="StaticBody/CollisionShape"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
 material = SubResource( 2 )

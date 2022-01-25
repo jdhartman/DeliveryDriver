@@ -25,6 +25,20 @@ transform = Transform( 0.936779, -0.331514, 0.111998, 0.0163651, 0.361221, 0.932
 projection = 0
 fov = 61.1
 
+[node name="FPSContainer" type="MarginContainer" parent="."]
+margin_left = 1862.0
+margin_top = 2.0
+margin_right = 1902.0
+margin_bottom = 42.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="FPSContainer"]
+margin_top = 13.0
+margin_right = 40.0
+margin_bottom = 27.0
+
 [node name="UIController" type="MarginContainer" parent="."]
 margin_left = 9.0
 margin_top = 1.0

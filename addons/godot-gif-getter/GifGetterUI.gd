@@ -33,11 +33,11 @@ var _stop_capture: bool = true
 var _images: Array = []
 
 # Delay between storing viewport texture data
-var _frame_skip: int = 0
+var _frame_skip: int = 1
 # Count ticks between each frame skip
 var _frame_skip_counter: int = 0
 # Delay between each frame in the gif
-var _gif_frame_delay: int = 0
+var _gif_frame_delay: int = 3
 
 var _second_recording: int = 5000
 
@@ -50,6 +50,7 @@ var _render_quality: int = 30
 
 # Background thread for capturing screenshots
 var _process_thread: Thread = Thread.new()
+var _capture_thread: Thread = Thread.new()
 # Number of render threads
 var _max_threads: int = 4
 
@@ -60,6 +61,8 @@ var _save_location: String
 var _gif_handler: Reference = load("res://addons/godot-gif-getter/GifHandler.gdns").new()
 
 var _hide_ui_action: String
+
+onready var viewport = get_viewport()
 
 ###############################################################################
 # Builtin functions                                                           #
@@ -72,10 +75,14 @@ func _ready() -> void:
 	control.visible = false
 
 func _physics_process(_delta: float) -> void:
+	_frame_skip_counter += 1
+
 	if _elapsed_time < _second_recording:
 		_elapsed_time = OS.get_ticks_msec() - start_time
 	if not _stop_capture:
-		_capture()
+		if not _capture_thread.is_active():
+			print("start capture")
+			_capture_thread.start(self, "_capture")
 	if _should_process:
 		if not _process_thread.is_active():
 			_process_thread.start(self, "_process_frames")
@@ -95,14 +102,23 @@ func _input(event: InputEvent) -> void:
 func _exit_tree() -> void:
 	if _process_thread.is_active():
 		_process_thread.wait_to_finish()
+	if _capture_thread.is_active():
+		_capture_thread.wait_to_finish()
 
 func _capture() -> void:
-	var image: Image = get_viewport().get_texture().get_data()
-	
-	_images.push_back(image)
+	while not _stop_capture:
+		if _frame_skip_counter < _frame_skip:
+			continue
 
-	if (_elapsed_time >= _second_recording):
-		_images.pop_front()
+		var image: Image = viewport.get_texture().get_data()
+
+		_images.push_back(image)
+
+		if (_elapsed_time >= _second_recording):
+			_images.pop_front()
+
+		_frame_skip_counter = 0
+
 
 func _process_frames(_x) -> void:
 	var dir: Directory = Directory.new()
@@ -120,7 +136,9 @@ func _process_frames(_x) -> void:
 
 	_images.clear()
 	
+	_capture_thread.call_deferred("wait_to_finish")
 	_process_thread.call_deferred("wait_to_finish")
+
 	_stop_capture = false
 	_elapsed_time = 0
 	start_time = OS.get_ticks_msec()
@@ -188,8 +206,12 @@ func _rust_multi_thread() -> void:
 	var file : String = "/%d-%02d-%02d_%02d_%02d.gif" % [time.year, time.month, time.day, time.hour, time.minute];
 	var full_path = _save_location + file
 
+	_log_message("%s" % (_second_recording / _images.size()))
+
+	var frame_delay = _second_recording / (_images.size() * 10)
+
 	_gif_handler.set_file_name(full_path)
-	_gif_handler.set_frame_delay(2)
+	_gif_handler.set_frame_delay(frame_delay + 1)
 	_gif_handler.set_parent(self)
 	_gif_handler.set_render_quality(_render_quality)
 	_gif_handler.write_frames(
