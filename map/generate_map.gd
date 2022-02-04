@@ -67,16 +67,14 @@ func calculate_roads():
 func set_tile_roads(i, j):
 	var m = mid_matrix[i][j]
 
-	var house_probability = .8
+	var house_probability = 1
 
 	var x_scalar = i * map_to_road_ratio
 	var z_scalar = j * map_to_road_ratio
 
 	var up_locations = [
 		Vector3(-2, -3, PI / 2),
-		Vector3(-2, -2, PI / 2),
 		Vector3(0, -3, 3 * PI / 2),
-		Vector3(0, -2, 3 * PI / 2)
 	]
 
 	var down_locations = [
@@ -91,13 +89,11 @@ func set_tile_roads(i, j):
 		Vector3(-4, -2, 0),
 		Vector3(-3, 0, PI),
 		Vector3(-4, 0, PI),
-		Vector3(-2, 0, PI)
 	]
 
 	var right_locations = [
 		Vector3(1, -2, 0),
 		Vector3(1, 0, PI),
-		Vector3(0, 0, PI)
 	]
 
 	if isUp(m):
