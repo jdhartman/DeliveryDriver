@@ -13,7 +13,7 @@ func _ready():
 
 export var gravity = -20.0
 
-export var steering_limit = 10.0  # front wheel max turning angle (deg)
+export var steering_limit = 5.0  # front wheel max turning angle (deg)
 
 export var engine_power = 6.0
 export var braking = -9.0
@@ -29,6 +29,8 @@ var drifting = false
 var acceleration = Vector3.ZERO
 var velocity = Vector3.ZERO
 var steer_angle = 0.0
+var target_turn = 0.0
+var current_turn = 0.0
 
 var wheel_base = 0.6
 
@@ -53,18 +55,32 @@ func apply_friction(delta):
 	
 func get_input():
 	acceleration = Vector3.ZERO
-	if Input.is_action_pressed("ui_up"):
+	var car_is_moving = Input.is_action_pressed("ui_up") || Input.is_action_pressed("ui_down") || Input.is_action_pressed("ui_left") || Input.is_action_pressed("ui_right") 
+
+	if car_is_moving:
 		acceleration = -transform.basis.z * engine_power
-	if Input.is_action_pressed("ui_down"):
-		acceleration = -transform.basis.z * braking
 
-	var turn = Input.get_action_strength("ui_left")
-	turn -= Input.get_action_strength("ui_right")
+	var turn = 0
+	var x = 0
+	var z = 0
 
-	turn += rand_range(-.2, .2)
+	x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
+	z = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 
+	if Input.is_action_pressed("ui_left") && abs(transform.basis.z.x - 1) > .001 :
+		turn = 1 if transform.basis.z.z > 0 else -1
+	if Input.is_action_pressed("ui_right") && abs(transform.basis.z.x + 1) > .001:
+		turn = -1 if transform.basis.z.z > 0 else 1
+
+	if Input.is_action_pressed("ui_up") && abs(transform.basis.z.z - 1) > .001 :
+		turn = -1 if transform.basis.z.x > 0 else 1
+	if Input.is_action_pressed("ui_down") && abs(transform.basis.z.z + 1) > .001 :
+		turn = 1 if transform.basis.z.x > 0 else -1
+	
+	target_turn = Vector3(x, 0, z)
+	
 	var turn_limit = steering_limit / max(1, velocity.length() * .12)
-	if acceleration.length() != 0:
+	if acceleration.length() < 0.2:
 		turn_limit = steering_limit / max(1, velocity.length() * .2)
 		
 	steer_angle = turn * deg2rad(turn_limit)
@@ -77,18 +93,11 @@ func calculate_steering(delta):
 		drifting = true
 	if drifting and velocity.length() < slip_speed:
 		drifting = false
-	var traction = traction_fast if drifting else traction_slow
+	var traction = traction_fast
 
-	var rear_wheel = transform.origin + transform.basis.z * wheel_base / 2.0
-	var front_wheel = transform.origin - transform.basis.z * wheel_base / 2.0
-	rear_wheel += velocity * delta
-	front_wheel += velocity.rotated(transform.basis.y, steer_angle) * delta
-	var new_heading = rear_wheel.direction_to(front_wheel)
+	velocity = lerp(velocity, target_turn * velocity.length(), traction)
 
-	var d = new_heading.dot(velocity.normalized())
-	if d > 0:
-		velocity = lerp(velocity, new_heading * velocity.length(), traction)
-	if d < 0:
-		velocity = -new_heading * min(velocity.length(), max_speed_reverse)
-	look_at(transform.origin + new_heading, transform.basis.y)
+	if target_turn.length() > 0:
+		var new_transform = transform.looking_at(transform.origin + target_turn, Vector3.UP)
+		transform = transform.interpolate_with(new_transform, steering_limit * delta)
 		

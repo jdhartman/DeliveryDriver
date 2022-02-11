@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://car/car1.tscn" type="PackedScene" id=1]
 [ext_resource path="res://camera/camera.tscn" type="PackedScene" id=2]
@@ -6,6 +6,11 @@
 [ext_resource path="res://ui/ui_controller.gd" type="Script" id=4]
 [ext_resource path="res://package/delivery_tracker.gd" type="Script" id=5]
 [ext_resource path="res://addons/godot-gif-getter/GifGetterUI.tscn" type="PackedScene" id=6]
+[ext_resource path="res://package/throw_package.gd" type="Script" id=7]
+[ext_resource path="res://package/package1.tscn" type="PackedScene" id=8]
+
+[sub_resource type="SpatialMaterial" id=1]
+albedo_color = Color( 0.027451, 0.847059, 0.968627, 0.34902 )
 
 [node name="Spatial" type="Spatial"]
 
@@ -18,11 +23,20 @@ tile_size = 48
 script = ExtResource( 5 )
 total = 50
 
+[node name="ThrowTarget" type="Spatial" parent="."]
+script = ExtResource( 7 )
+package_scene = ExtResource( 8 )
+
+[node name="ThrowLeftTarget" type="CSGCylinder" parent="ThrowTarget"]
+transform = Transform( 0.693749, 0, 0, 0, 0.280707, 0, 0, 0, 0.693749, -8.62463, 0, -4.86412 )
+material = SubResource( 1 )
+
 [node name="Car" parent="." instance=ExtResource( 1 )]
 
 [node name="Camera" parent="." instance=ExtResource( 2 )]
 transform = Transform( 0.936779, -0.331514, 0.111998, 0.0163651, 0.361221, 0.932337, -0.349539, -0.87156, 0.34381, 3.35296, 28.0554, 12.5383 )
 projection = 0
+current = true
 fov = 61.1
 
 [node name="FPSContainer" type="MarginContainer" parent="."]
