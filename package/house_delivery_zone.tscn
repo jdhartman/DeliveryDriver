@@ -5,7 +5,7 @@
 [sub_resource type="BoxShape" id=1]
 
 [sub_resource type="SpatialMaterial" id=2]
-albedo_color = Color( 0.937255, 0.156863, 0.203922, 1 )
+albedo_color = Color( 0.909804, 0.0980392, 0.0705882, 0.117647 )
 
 [node name="DeliveryZone" type="Area"]
 transform = Transform( 3, 0, 0, 0, 0.189552, 0, 0, 0, 3, 0, 0, 0 )

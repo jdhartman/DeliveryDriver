@@ -1,7 +1,6 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://package/throw_package.gd" type="Script" id=1]
-[ext_resource path="res://package/package1.tscn" type="PackedScene" id=2]
+[ext_resource path="res://car/car.gd" type="Script" id=1]
 
 [sub_resource type="BoxShape" id=10]
 
@@ -22,7 +21,6 @@ engine_power = 15.0
 friction = -5.0
 max_speed_reverse = 5.0
 slip_speed = 20.0
-package_scene = ExtResource( 2 )
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.20854, 0 )
@@ -66,11 +64,9 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2.36929, -1.45209 )
 
 [node name="ThrowRight" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.36929, -1.45209 )
+visible = false
 
 [node name="ThrowLeftTarget" type="CSGCylinder" parent="."]
 transform = Transform( 0.693749, 0, 0, 0, 0.280707, 0, 0, 0, 0.693749, -8.62463, 0, -4.86412 )
-material = SubResource( 13 )
-
-[node name="ThrowRightTarget" type="CSGCylinder" parent="."]
-transform = Transform( 0.693749, 0, 0, 0, 0.281393, 0, 0, 0, 0.693749, 8.8469, 0, -4.86412 )
+visible = false
 material = SubResource( 13 )

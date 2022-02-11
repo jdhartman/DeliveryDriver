@@ -8,7 +8,7 @@ albedo_color = Color( 0.45098, 0.298039, 0.0470588, 1 )
 [node name="RigidBody" type="RigidBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.18964, 1.53069, 0.738252 )
 collision_layer = 8
-collision_mask = 3
+collision_mask = 11
 mass = 20.05
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
