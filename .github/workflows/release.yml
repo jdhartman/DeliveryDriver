@@ -27,6 +27,7 @@ jobs:
           lfs: true
       - name: Checkout LFS objects
         run: | 
+          git lfs checkout
           git lfs pull
           ls -s map/road_meshes
         
