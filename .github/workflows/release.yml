@@ -28,7 +28,7 @@ jobs:
       - name: Checkout LFS objects
         run: | 
           git lfs pull
-          ls
+          ls -s map/road_meshes
         
       - name: Bump version and push tag
         id: tag_version
