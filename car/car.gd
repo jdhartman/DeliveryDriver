@@ -77,7 +77,7 @@ func get_input():
 	if Input.is_action_pressed("ui_down") && abs(transform.basis.z.z + 1) > .001 :
 		turn = 1 if transform.basis.z.x > 0 else -1
 	
-	target_turn = Vector3(x, 0, z)
+	target_turn = Vector3(x, 0, z).normalized()
 	
 	var turn_limit = steering_limit / max(1, velocity.length() * .12)
 	if acceleration.length() < 0.2:
