@@ -12,8 +12,6 @@ const MAX_CONSOLE_MESSAGE_COUNT: int = 20
 
 onready var control: Control = $Control/Options
 
-onready var capture_now_button: Button = $Control/Options/VBoxContainer/ButtonContainer/CaptureNowButton
-onready var capture_in_five_seconds_button: Button = $Control/Options/VBoxContainer/ButtonContainer/CaptureInFiveSecondsButton
 onready var render_quality_line_edit: LineEdit = $Control/Options/VBoxContainer/RenderQualityContainer/LineEdit
 onready var frames_line_edit: LineEdit = $Control/Options/VBoxContainer/FramesContainer/LineEdit
 onready var frame_skip_line_edit: LineEdit = $Control/Options/VBoxContainer/FrameSkipContainer/LineEdit
