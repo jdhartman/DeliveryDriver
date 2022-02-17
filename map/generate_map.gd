@@ -31,7 +31,7 @@ func _ready():
 	road_grid = $GridMaps/RoadGridMap
 	house_scenes = [house1, house2, house3]
 
-	$GridMaps.global_transform.origin = Vector3(scalar,-.95, scalar)
+	$GridMaps.transform.origin = Vector3(scalar,-.95, scalar)
 	$GridMaps.global_scale(Vector3(scalar, 1, scalar))
 
 	for i in range(map_size):
@@ -47,7 +47,7 @@ func _ready():
 func add_tile(i, j):
 	var grass_instance = grass.instance()
 	
-	grass_instance.global_transform.origin = Vector3(i * tile_size * 2, 0, j * tile_size * 2)
+	grass_instance.transform.origin = Vector3(i * tile_size * 2, 0, j * tile_size * 2)
 	grass_instance.scale = Vector3(scalar, 1, scalar)
 
 	add_child(grass_instance)
