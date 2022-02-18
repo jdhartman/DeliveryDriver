@@ -50,7 +50,7 @@ jobs:
         # uses: firebelley/godot-export@1e28506c4afa5c7c33c7da60f87b71ccacf4a405
         uses: firebelley/godot-export@v3.0.0
         with:
-          export_debug: true
+          export_debug: false
           # The download url of the 64 bit Linux Headless Godot executable.
           godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/3.4.2/Godot_v3.4.2-stable_linux_headless.64.zip
           # The url of the export templates corresponding to the Godot executable version.
