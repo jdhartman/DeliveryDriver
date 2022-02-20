@@ -13,3 +13,5 @@ icon.png
 rust/target/
 
 *.blend1
+
+.DS_Store
