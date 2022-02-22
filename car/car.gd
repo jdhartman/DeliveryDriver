@@ -1,16 +1,5 @@
 extends KinematicBody
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	#wheel_base = ($Wheel_FL.transform.basis.z - $Wheel_BL.transform.basis.z).abs()  / 2
-	pass # Replace with function body.
-
 export var gravity = -20.0
 
 export var steering_limit = 5.0  # front wheel max turning angle (deg)
@@ -29,17 +18,26 @@ var drifting = false
 var acceleration = Vector3.ZERO
 var velocity = Vector3.ZERO
 var steer_angle = 0.0
-var target_turn = 0.0
+var target_turn = Vector3.ZERO
 var current_turn = 0.0
 
 var wheel_base = 0.6
+var is_driving = true
+
+func _ready():
+	var driver = $Driver
+	driver.connect("driver_control_change", self, "_on_driver_control_change")
+
+func _on_driver_control_change(_is_driving):
+	is_driving = _is_driving
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	if is_on_floor():
-		get_input()
+		get_car_input()
 		apply_friction(delta)
 		calculate_steering(delta)
+
 	acceleration.y = gravity
 	velocity += acceleration * delta
 	velocity = move_and_slide_with_snap(velocity, -transform.basis.y, Vector3.UP, true)
@@ -53,8 +51,10 @@ func apply_friction(delta):
 	var drag_force = velocity * velocity.length() * drag * delta
 	acceleration += drag_force + friction_force
 	
-func get_input():
+func get_car_input():
 	acceleration = Vector3.ZERO
+	if not is_driving:
+		return
 	var car_is_moving = Input.is_action_pressed("ui_up") || Input.is_action_pressed("ui_down") || Input.is_action_pressed("ui_left") || Input.is_action_pressed("ui_right") 
 
 	if car_is_moving:
