@@ -8,6 +8,7 @@ onready var player = get_node("../Car/Driver")
 onready var car_throw = get_node("../Car/ThrowLeft")
 onready var player_throw = get_node("../Car/Driver/ThrowRight")
 onready var camera = get_node("../Camera")
+onready var scene_root = get_tree().root.get_children()[0]
 
 var viewport_size = 0;
 var max_throw_distance = 15;
@@ -20,6 +21,10 @@ var upward_force = 50.0
 var player_package: Node
 
 var is_driving = true
+
+var throwing_package = false
+
+signal throwing_package(is_throwing)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -70,7 +75,11 @@ func track_throw_target(throw_origin):
 	throw_target_node.visible = Input.is_action_pressed("throw")
 
 	if Input.is_action_pressed("throw") and player_package:
-		player_package.transform.origin = player.get_node("ThrowRight").transform.origin
+		if not throwing_package:
+			throwing_package = true
+			emit_signal("throwing_package", throwing_package)
+
+		player_package.transform= player.get_node("ThrowRight").global_transform
 
 	if result.has("position"):
 		var distance = result.position.distance_to(throw_origin)
@@ -87,20 +96,12 @@ func throw_package(throw_origin):
 	var driver_origin = thrower.global_transform.origin
 	var throw_vector = Vector3.ZERO
 
-	var package: Node
+	var package = package_scene.instance()
 
-	if is_driving:
-		package = package_scene.instance()
-	else:
-		package = player_package
-		player.remove_child(package)
+	if not is_driving and player_package:
+		scene_root.remove_child(player_package)
 		player_package = null
 
-	if not package:
-		print("no package")
-		return
-
-	var scene_root = get_tree().root.get_children()[0]
 	scene_root.add_child(package)
 
 	package.global_transform.origin = throw_origin
@@ -113,3 +114,4 @@ func throw_package(throw_origin):
 	var from_target = (throw_vector - driver_origin).normalized()
 
 	package.apply_impulse(Vector3.ZERO, Vector3(distance * 15 * from_target.x, upward_force, distance * 15 * from_target.z))
+	throwing_package = false

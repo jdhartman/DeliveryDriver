@@ -30,6 +30,8 @@ var velocity = Vector3.ZERO
 var has_package = false
 var current_package: RigidBody
 
+var throwing_package = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
@@ -40,6 +42,7 @@ func _ready():
 	
 	var throw_manager = scene_root.get_node("ThrowTarget")
 
+	throw_manager.connect("throwing_package", self, "_on_throwing_package")
 	self.connect("body_entered", self, "_on_package_entered")
 	self.connect("body_exited", self, "_on_package_exited")
 
@@ -69,6 +72,9 @@ func _physics_process(delta):
 	if not is_driving:
 		get_movement(delta)
 		apply_friction(delta)
+
+		if current_package and not throwing_package:
+			current_package.transform = $PackageCarryPosition.global_transform
 
 		acceleration.y = -gravity
 	
@@ -130,20 +136,21 @@ func _on_package_entered(body: Node):
 	if not has_package and not current_package:
 		print("HAS PACKAGE")
 		has_package = true
-
-		scene_root.remove_child(body)
-		self.add_child(body)
-
+		throwing_package = false
 		current_package = body
-		current_package.transform.origin = $PackageCarryPosition.transform.origin
+		current_package.collision_mask = 1 | 8
+		print(current_package.collision_mask)
 
 		emit_signal("has_package", current_package)
 
 func _on_package_exited(body: Node):
-	print("TEST",body.get_parent())
+	if current_package && body.get_instance_id() != current_package.get_instance_id():
+		return
 	
 	if has_package and current_package:
 		print("PACKAGE THROWN")
 		has_package = false
 		current_package = null
-	
+
+func _on_throwing_package(is_throwing):
+	throwing_package = is_throwing
