@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://map/houses/meshes/window.obj" type="ArrayMesh" id=1]
+
+[sub_resource type="SpatialMaterial" id=1]
+flags_transparent = true
+albedo_color = Color( 0.603922, 0.898039, 1, 0.47451 )
+
+[node name="Window" type="MeshInstance"]
+transform = Transform( 9.8926e-18, -1.17756e-09, -0.021762, 2.55659e-09, -0.0584879, 1.33024e-08, -0.0588002, -2.57024e-09, 1.12349e-16, 1.0563, 4.54404, -3.76678 )
+mesh = ExtResource( 1 )
+material/0 = SubResource( 1 )
