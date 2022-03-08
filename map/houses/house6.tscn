@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://map/houses/meshes/house6.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://package/house_delivery_zone.tscn" type="PackedScene" id=2]
+[ext_resource path="res://map/houses/house_generation.gd" type="Script" id=3]
+[ext_resource path="res://map/houses/textures/texture3.tres" type="Material" id=4]
+
+[node name="Spatial" type="Spatial"]
+script = ExtResource( 3 )
+textures = "res://map/houses/textures"
+
+[node name="DeliveryZone" parent="." instance=ExtResource( 2 )]
+transform = Transform( 3, 0, 0, 0, 0.189552, 0, 0, 0, 3, 0, 0, 4.89922 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( -2.49332e-09, 0, -0.0570404, 0, 0.0570404, 0, 0.0570404, 0, -2.49332e-09, -1.86789, 1.39726, -3.61332 )
+mesh = ExtResource( 1 )
+material/0 = ExtResource( 4 )
