@@ -1,0 +1,49 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://map/houses/meshes/house4.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://package/house_delivery_zone.tscn" type="PackedScene" id=2]
+[ext_resource path="res://map/houses/house_generation.gd" type="Script" id=3]
+[ext_resource path="res://map/houses/textures/texture3.tres" type="Material" id=4]
+[ext_resource path="res://map/houses/window.tscn" type="PackedScene" id=5]
+[ext_resource path="res://map/houses/meshes/door.obj" type="ArrayMesh" id=6]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 1.08029, 6.35673, 5.88525 )
+
+[node name="Spatial" type="Spatial"]
+script = ExtResource( 3 )
+textures = "res://map/houses/textures"
+
+[node name="DeliveryZone" parent="." instance=ExtResource( 2 )]
+transform = Transform( 3, 0, 0, 0, 0.189552, 0, 0, 0, 3, 0, 0, 4.89922 )
+
+[node name="StaticBody" type="StaticBody" parent="."]
+collision_mask = 3
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+transform = Transform( 1, 0, 3.55271e-15, 0, 1, 0, -3.55271e-15, 0, 1, 0.116006, 6.51978, -6.2581 )
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( -2.49332e-09, 0, -0.0570404, 0, 0.0570404, 0, 0.0570404, 0, -2.49332e-09, 0, 0, -6.79288 )
+mesh = ExtResource( 1 )
+material/0 = ExtResource( 4 )
+
+[node name="Window" parent="." instance=ExtResource( 5 )]
+
+[node name="Window2" parent="." instance=ExtResource( 5 )]
+transform = Transform( 9.8926e-18, -1.17756e-09, -0.021762, 2.55659e-09, -0.0584879, 1.33024e-08, -0.0588002, -2.57024e-09, 1.12349e-16, 1.0563, 9.83815, -8.80985 )
+
+[node name="Window3" parent="." instance=ExtResource( 5 )]
+transform = Transform( 9.8926e-18, -1.17756e-09, -0.021762, 2.55659e-09, -0.0584879, 1.33024e-08, -0.126402, -5.5252e-09, 2.41515e-16, -0.989953, 8.90691, -6.18744 )
+
+[node name="Window4" parent="." instance=ExtResource( 5 )]
+transform = Transform( -0.0202879, -8.86814e-10, 3.28211e-10, 2.89344e-09, -0.066194, 1.50551e-08, 2.57024e-09, 1.17756e-09, 0.021762, 0.0888512, 6.46258, -12.0913 )
+
+[node name="Window5" parent="." instance=ExtResource( 5 )]
+transform = Transform( -0.0213443, -9.32988e-10, 3.453e-10, 4.07336e-09, -0.0931874, 2.11944e-08, 2.57024e-09, 1.17756e-09, 0.021762, 0.0888512, 8.37453, -0.423247 )
+
+[node name="Door" type="MeshInstance" parent="."]
+transform = Transform( -0.000367039, 0, -0.0312928, 0, 0.0366427, 0, 0.0356324, 0, -0.000417939, 0.130123, 1.5542, -0.476943 )
+mesh = ExtResource( 6 )
+material/0 = null

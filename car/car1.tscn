@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://car/car.gd" type="Script" id=1]
+[ext_resource path="res://player/player.tscn" type="PackedScene" id=3]
 
 [sub_resource type="BoxShape" id=10]
 
@@ -10,8 +11,7 @@ albedo_color = Color( 0, 0, 0, 1 )
 [sub_resource type="SpatialMaterial" id=12]
 albedo_color = Color( 0.14902, 0.0156863, 0.0156863, 1 )
 
-[sub_resource type="SpatialMaterial" id=13]
-albedo_color = Color( 1, 0, 0, 0.34902 )
+[sub_resource type="BoxShape" id=13]
 
 [node name="Car" type="KinematicBody"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.837199, 0 )
@@ -23,10 +23,17 @@ max_speed_reverse = 5.0
 slip_speed = 20.0
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.20854, 0 )
+transform = Transform( 1, 0, 0, 0, 1.2883, 0, 0, 0, 0.835079, 0, 0.0607635, 0.830762 )
 shape = SubResource( 10 )
 
 [node name="CSGBox" type="CSGBox" parent="CollisionShape"]
+visible = false
+
+[node name="CollisionShape2" type="CollisionShape" parent="."]
+transform = Transform( 0.776973, 0, 0, 0, 0.535955, 0, 0, 0, 0.930961, 0, -0.449122, -0.948738 )
+shape = SubResource( 10 )
+
+[node name="CSGBox" type="CSGBox" parent="CollisionShape2"]
 visible = false
 
 [node name="CSGCylinder2" type="CSGCylinder" parent="."]
@@ -55,7 +62,7 @@ height = 1.8874
 material = SubResource( 12 )
 
 [node name="CSGBox2" type="CSGBox" parent="."]
-transform = Transform( 0.76312, 0, 0, 0, 0.662839, 0, 0, 0, 1.40774, 0.00290489, 0.749856, 0.294402 )
+transform = Transform( 0.76312, 0, 0, 0, 0.662839, 0, 0, 0, 0.839634, -0.0206513, 0.729631, 0.839438 )
 height = 1.8874
 material = SubResource( 12 )
 
@@ -66,7 +73,16 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2.36929, -1.45209 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.36929, -1.45209 )
 visible = false
 
-[node name="ThrowLeftTarget" type="CSGCylinder" parent="."]
-transform = Transform( 0.693749, 0, 0, 0, 0.280707, 0, 0, 0, 0.693749, -8.62463, 0, -4.86412 )
-visible = false
-material = SubResource( 13 )
+[node name="Driver" parent="." instance=ExtResource( 3 )]
+
+[node name="DriverSeatLocation" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388023, 0.117296, -0.423204 )
+
+[node name="DriverExitLocation" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.66115, 0.117296, -0.423204 )
+
+[node name="DriverEnterArea" type="Area" parent="."]
+transform = Transform( 1.56898, 0, 0, 0, 1.10235, 0, 0, 0, 0.7184, 0, 0.391712, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="DriverEnterArea"]
+shape = SubResource( 13 )

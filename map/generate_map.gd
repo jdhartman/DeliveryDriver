@@ -5,6 +5,10 @@ onready var grass = preload("res://map/floor.tscn")
 onready var house1 = preload("res://map/houses/house1.tscn")
 onready var house2 = preload("res://map/houses/house2.tscn")
 onready var house3 = preload("res://map/houses/house3.tscn")
+onready var house4 = preload("res://map/houses/house4.tscn")
+onready var house5 = preload("res://map/houses/house5.tscn")
+onready var house6 = preload("res://map/houses/house6.tscn")
+onready var house7 = preload("res://map/houses/house7.tscn")
 
 onready var delivery_tracker = get_node("../DeliveryTracker")
 
@@ -29,7 +33,7 @@ func _ready():
 	scalar = tile_size / map_to_road_ratio
 
 	road_grid = $GridMaps/RoadGridMap
-	house_scenes = [house1, house2, house3]
+	house_scenes = [house1, house2, house3, house4, house5, house6, house7]
 
 	$GridMaps.transform.origin = Vector3(scalar,-.95, scalar)
 	$GridMaps.global_scale(Vector3(scalar, 1, scalar))
