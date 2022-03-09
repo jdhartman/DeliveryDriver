@@ -40,9 +40,6 @@ func _ready():
 	
 	var throw_manager = scene_root.get_node("ThrowTarget")
 
-	self.connect("body_entered", self, "_on_package_entered")
-	self.connect("body_exited", self, "_on_package_exited")
-
 func _on_driver_enter(_body: Node):
 	if is_driving or not has_exited_car:
 		return
