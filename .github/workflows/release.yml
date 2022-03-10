@@ -21,11 +21,21 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-        uses: actions/checkout@v2
-        with:
-          lfs: true
+      - name: Checkout github repo (+ download lfs dependencies)
+        uses: nschloe/action-cached-lfs-checkout@v1.0.1
       - name: Checkout LFS objects
-        run: git lfs checkout
+        run: | 
+          git lfs checkout
+          git lfs pull
+          ls -s map/road_meshes
+      - name: Check for downloaded LFS objects
+        run: |
+          if grep -q Blender "map/road_meshes/down.obj"; then
+              echo "File Found!"
+          else
+              echo "Booooo"
+              exit 1
+          fi
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.0
@@ -40,6 +50,7 @@ jobs:
         # uses: firebelley/godot-export@1e28506c4afa5c7c33c7da60f87b71ccacf4a405
         uses: firebelley/godot-export@v3.0.0
         with:
+          export_debug: false
           # The download url of the 64 bit Linux Headless Godot executable.
           godot_executable_download_url: https://downloads.tuxfamily.org/godotengine/3.4.2/Godot_v3.4.2-stable_linux_headless.64.zip
           # The url of the export templates corresponding to the Godot executable version.
