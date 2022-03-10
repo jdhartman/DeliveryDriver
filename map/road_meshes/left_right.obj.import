@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/left_right.obj-115b6c61fbf380e0177344bd21f10c31.mesh"
+
+[deps]
+
+files=[ "res://.import/left_right.obj-115b6c61fbf380e0177344bd21f10c31.mesh" ]
+
+source_file="res://map/road_meshes/left_right.obj"
+dest_files=[ "res://.import/left_right.obj-115b6c61fbf380e0177344bd21f10c31.mesh", "res://.import/left_right.obj-115b6c61fbf380e0177344bd21f10c31.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286
