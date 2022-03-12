@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://player/player_meshes/bear.gltf" type="PackedScene" id=1]
+
+[node name="bear" instance=ExtResource( 1 )]
+transform = Transform( 0.334759, 0, 0, 0, 0.334759, 0, 0, 0, 0.334759, 0, 0, 0 )
+
+[node name="Skeleton" parent="Armature" index="0"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0 )
+
+[node name="FootRight" type="BoneAttachment" parent="Armature/Skeleton" index="1"]
+transform = Transform( 0.136957, -0.05033, 0.989298, 0.986926, -0.0787387, -0.140635, 0.0849741, 0.995624, 0.0388882, -0.865117, -2.38557, -0.0305691 )
+bone_name = "foot_right"
+
+[node name="FootLeft" type="BoneAttachment" parent="Armature/Skeleton" index="2"]
+transform = Transform( 0.136958, 0.0503301, 0.989297, 0.988014, -0.0787386, -0.132774, 0.0712134, 0.995624, -0.0605107, 0.874328, -2.38557, -0.030569 )
+bone_name = "foot_left"
+
+[node name="SkeletonIK" type="SkeletonIK" parent="Armature/Skeleton" index="3"]
+process_priority = 1
+root_bone = "calf_left"
+tip_bone = "foot_left"
+
+[node name="IK_Target_Left" type="Position3D" parent="." index="1"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.820028, -3.56105e-07, 2.08174 )
+
+[node name="Target_Left" type="Position3D" parent="IK_Target_Left" index="0"]
