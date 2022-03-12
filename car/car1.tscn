@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://car/car.gd" type="Script" id=1]
-[ext_resource path="res://player/player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://player/bear1.tscn" type="PackedScene" id=2]
 
 [sub_resource type="BoxShape" id=10]
 
@@ -69,11 +69,12 @@ material = SubResource( 12 )
 [node name="ThrowLeft" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2.36929, -1.45209 )
 
+[node name="Driver" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 2.38419e-07, 0, 1, 0, -2.38419e-07, 0, 1, -0.181886, -0.701527, -0.168716 )
+
 [node name="ThrowRight" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.36929, -1.45209 )
 visible = false
-
-[node name="Driver" parent="." instance=ExtResource( 3 )]
 
 [node name="DriverSeatLocation" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388023, 0.117296, -0.423204 )
