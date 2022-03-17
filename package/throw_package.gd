@@ -4,9 +4,9 @@ export (PackedScene) var package_scene
 
 onready var throw_target_node = $ThrowLeftTarget
 onready var car = get_node("../Car")
-onready var player = get_node("../Car/Driver")
+onready var player = get_node("../Car/Driver/Bear")
 onready var car_throw = get_node("../Car/ThrowLeft")
-onready var player_throw = get_node("../Car/Driver/ThrowRight")
+onready var player_throw = get_node("../Car/Driver/Bear/ThrowRight")
 onready var camera = get_node("../Camera")
 
 var viewport_size = 0;

@@ -25,7 +25,8 @@ var wheel_base = 0.6
 var is_driving = true
 
 func _ready():
-	var driver = $Driver/Driver/Bear
+	var driver = $Driver/Bear
+	print(driver)
 	driver.connect("driver_control_change", self, "_on_driver_control_change")
 
 func _on_driver_control_change(_is_driving):

@@ -6,7 +6,7 @@ extends Camera
 # var b = "text"
 
 onready var car = get_node("../Car")
-onready var player = get_node("../Car/Driver")
+onready var player = get_node("../Car/Driver/Bear")
 
 var target : Node
 var offset : Vector3

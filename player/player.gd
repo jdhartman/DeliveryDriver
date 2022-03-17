@@ -4,10 +4,10 @@ extends KinematicBody
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-onready var car = get_parent()
-onready var driver_seat = get_parent().get_node("DriverSeatLocation")
-onready var driver_exit = get_parent().get_node("DriverExitLocation")
-onready var driver_enter_area = get_parent().get_node("DriverEnterArea")
+onready var car = get_parent().get_parent()
+onready var driver_seat = car.get_node("DriverSeatLocation")
+onready var driver_exit = car.get_node("DriverExitLocation")
+onready var driver_enter_area = car.get_node("DriverEnterArea")
 onready var scene_root =  get_tree().root.get_children()[0]
 
 export var is_driving = true

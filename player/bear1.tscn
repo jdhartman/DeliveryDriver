@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://player/player_meshes/Material_001.material" type="Material" id=1]
 [ext_resource path="res://player/ik_movement.gd" type="Script" id=2]
 [ext_resource path="res://player/player_meshes/bear.obj" type="ArrayMesh" id=3]
+[ext_resource path="res://player/player.gd" type="Script" id=4]
 [ext_resource path="res://player/leg_ik.gd" type="Script" id=5]
 
 [sub_resource type="ArrayMesh" id=1]
@@ -78,6 +79,9 @@ bind/17/name = "foot_right"
 bind/17/bone = -1
 bind/17/pose = Transform( 0.136957, 0.986925, 0.0849742, -0.0503301, -0.0787385, 0.995624, 0.989298, -0.140634, 0.0388882, 0.0227435, -0.00526067, 0.871059 )
 
+[sub_resource type="SpatialMaterial" id=7]
+albedo_color = Color( 0.219608, 0.580392, 0.541176, 1 )
+
 [sub_resource type="CapsuleShape" id=3]
 height = 1.85296
 
@@ -86,10 +90,15 @@ albedo_color = Color( 0.207843, 0.113725, 0.0588235, 1 )
 
 [sub_resource type="BoxShape" id=5]
 
+[sub_resource type="SpatialMaterial" id=6]
+flags_transparent = true
+albedo_color = Color( 0.529412, 0.137255, 0.137255, 1 )
+
 [node name="Driver" type="Spatial"]
+script = ExtResource( 2 )
 
 [node name="Bear" type="KinematicBody" parent="."]
-script = ExtResource( 2 )
+script = ExtResource( 4 )
 
 [node name="Armature" type="Spatial" parent="Bear"]
 transform = Transform( -0.311934, 0, -2.72701e-08, 0, 0.311934, 0, 2.72701e-08, 0, -0.311934, 0.151762, 0.393521, 0.288958 )
@@ -202,7 +211,6 @@ script = ExtResource( 5 )
 process_priority = 1
 root_bone = "thigh_right"
 tip_bone = "foot_right"
-interpolation = 0.382
 target_node = NodePath("../../../Targets/Target_Start_Right")
 script = ExtResource( 5 )
 
@@ -210,26 +218,28 @@ script = ExtResource( 5 )
 transform = Transform( -0.311934, 0, -2.72701e-08, 0, 0.311934, 0, 2.72701e-08, 0, -0.311934, 0.278024, 0.641084, 0.225739 )
 
 [node name="Target_Start_Left" type="Position3D" parent="Bear/Targets"]
-transform = Transform( 0.0647399, -0.00869444, 0.997865, 0.997852, -0.00946088, -0.0648215, 0.0100039, 0.999918, 0.00806326, 1.44983, -3.21305, -0.263901 )
+transform = Transform( 0.0647399, -0.00869444, 0.997865, 0.997852, -0.00946088, -0.0648215, 0.0100039, 0.999918, 0.00806326, 0.946035, -3.7031, 2.75208 )
 
 [node name="CSGBox" type="CSGBox" parent="Bear/Targets/Target_Start_Left"]
-
-[node name="Target_End_Left" type="Position3D" parent="Bear/Targets"]
-transform = Transform( 0.0647399, -0.00869444, 0.997865, 0.997852, -0.00946088, -0.0648215, 0.0100039, 0.999918, 0.00806326, 1.44983, -3.21305, 5.78467 )
-
-[node name="CSGBox" type="CSGBox" parent="Bear/Targets/Target_End_Left"]
+transform = Transform( 1, 0, -1.44792e-09, 0, 1, 9.31323e-10, 3.11411e-09, 0, 1, 0, 0, 0 )
 
 [node name="Target_Start_Right" type="Position3D" parent="Bear/Targets"]
-transform = Transform( 0.0402014, -0.00845934, 0.999156, 0.998644, 0.0334301, -0.0398977, -0.0330647, 0.999406, 0.00979182, -0.786921, -3.14128, -0.341557 )
+transform = Transform( 0.0402014, -0.00845934, 0.999156, 0.998644, 0.0334301, -0.0398977, -0.0330647, 0.999406, 0.00979182, -0.906868, -3.14128, 1.80801 )
 
 [node name="CSGBox" type="CSGBox" parent="Bear/Targets/Target_Start_Right"]
 transform = Transform( 1, 0, 5.82077e-10, 3.35276e-08, 1, 0, 5.06407e-09, -9.31323e-10, 1, 0, 0, 0 )
 
-[node name="Target_End_Right" type="Position3D" parent="Bear/Targets"]
-transform = Transform( 0.0402014, -0.00845934, 0.999156, 0.998644, 0.0334301, -0.0398977, -0.0330647, 0.999406, 0.00979182, -0.786922, -3.14128, 5.8983 )
+[node name="Target_Reset_Left" type="Position3D" parent="Bear/Targets"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.68728, -3.86809, 0.530184 )
 
-[node name="CSGBox" type="CSGBox" parent="Bear/Targets/Target_End_Right"]
-transform = Transform( 1, 0, 5.82077e-10, 3.35276e-08, 1, 0, 5.06407e-09, -9.31323e-10, 1, 0, 0, 0 )
+[node name="CSGBox" type="CSGBox" parent="Bear/Targets/Target_Reset_Left"]
+material = SubResource( 7 )
+
+[node name="Target_Reset_Right" type="Position3D" parent="Bear/Targets"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.771788, -3.70906, 0.585568 )
+
+[node name="CSGBox" type="CSGBox" parent="Bear/Targets/Target_Reset_Right"]
+material = SubResource( 7 )
 
 [node name="CollisionShape" type="CollisionShape" parent="Bear"]
 transform = Transform( -0.767397, 1.27163e-08, 3.89325e-15, 0, -6.35816e-09, 1.01881, 2.85613e-07, 0.619256, 1.89592e-07, 0.151762, 0.818176, 0.288958 )
@@ -241,10 +251,6 @@ transform = Transform( -0.428402, 5.36337e-16, -4.9722e-08, -3.74521e-08, -2.024
 visible = false
 mesh = ExtResource( 3 )
 material/0 = SubResource( 4 )
-
-[node name="CSGBox" type="CSGBox" parent="Bear"]
-transform = Transform( -0.0620272, 0, -7.66976e-09, 0, 0.0680296, 0, 5.42259e-09, 0, -0.0877318, 0.194095, -0.235084, 0.309502 )
-visible = false
 
 [node name="ThrowRight" type="Position3D" parent="Bear"]
 transform = Transform( 0.311934, 0, 6.19798e-15, 0, 0.311934, 0, -6.19798e-15, 0, 0.311934, -1.14193, 1.70227, 0.235623 )
@@ -259,3 +265,19 @@ collision_mask = 8
 
 [node name="CollisionShape" type="CollisionShape" parent="Bear/Area"]
 shape = SubResource( 5 )
+
+[node name="Target_End_Right" type="Position3D" parent="."]
+transform = Transform( -0.0125402, 0.00263873, -0.311671, 0.311511, 0.010428, -0.0124454, 0.010314, -0.311749, -0.00305437, 0.523492, -0.338788, -1.61414 )
+visible = false
+
+[node name="CSGBox" type="CSGBox" parent="Target_End_Right"]
+transform = Transform( 1, 0, -2.22353e-08, 3.72529e-08, 1, 9.31323e-10, 5.23869e-09, 0, 1, 0, 0, 0 )
+material = SubResource( 6 )
+
+[node name="Target_End_Left" type="Position3D" parent="."]
+transform = Transform( -0.0201946, 0.00271206, -0.311268, 0.311264, -0.00295117, -0.02022, -0.00312055, -0.311908, -0.00251518, -0.174227, -0.361175, -1.5787 )
+visible = false
+
+[node name="CSGBox" type="CSGBox" parent="Target_End_Left"]
+transform = Transform( 1, 0, -1.41881e-09, 0, 1, 4.65661e-09, 3.11411e-09, 0, 1, 0, 0, 0 )
+material = SubResource( 6 )
