@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://car/car1.tscn" type="PackedScene" id=1]
 [ext_resource path="res://camera/camera.tscn" type="PackedScene" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://addons/godot-gif-getter/GifGetterUI.tscn" type="PackedScene" id=6]
 [ext_resource path="res://package/throw_package.gd" type="Script" id=7]
 [ext_resource path="res://package/package1.tscn" type="PackedScene" id=8]
+[ext_resource path="res://ui/icons/Circle_(transparent).svg" type="Texture" id=9]
 
 [sub_resource type="SpatialMaterial" id=1]
 albedo_color = Color( 0.027451, 0.847059, 0.968627, 0.34902 )
@@ -44,9 +45,6 @@ margin_left = 1862.0
 margin_top = 2.0
 margin_right = 1902.0
 margin_bottom = 42.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Label" type="Label" parent="FPSContainer"]
 margin_top = 13.0
@@ -59,9 +57,6 @@ margin_top = 1.0
 margin_right = 111.0
 margin_bottom = 41.0
 script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="UIController"]
 margin_right = 102.0
@@ -81,3 +76,20 @@ margin_bottom = 27.0
 text = "0/20"
 
 [node name="GifGetterUI" parent="." instance=ExtResource( 6 )]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+margin_left = 21.0
+margin_top = 862.0
+margin_right = 221.0
+margin_bottom = 1062.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
+margin_right = 200.0
+margin_bottom = 200.0
+texture = ExtResource( 9 )
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+margin_right = 200.0
+margin_bottom = 200.0

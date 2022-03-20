@@ -114,6 +114,11 @@ func get_movement(delta):
 
 	velocity = lerp(velocity, target_turn * velocity.length(), traction)
 
+	$Targets/Target_Reset_Left.transform.origin.z = velocity.length()
+	$Targets/Target_Reset_Left.transform.origin.y = -3.5 + velocity.length() / 5
+	$Targets/Target_Reset_Right.transform.origin.z = velocity.length()
+	$Targets/Target_Reset_Right.transform.origin.y = -3.5 + velocity.length() / 5
+
 	if target_turn.length() > 0:
 		var new_transform = transform.looking_at(transform.origin + target_turn, Vector3.UP)
 		transform = transform.interpolate_with(new_transform, turn_limit * delta)
