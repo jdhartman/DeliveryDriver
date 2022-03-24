@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://car/car1.tscn" type="PackedScene" id=1]
 [ext_resource path="res://camera/camera.tscn" type="PackedScene" id=2]
@@ -8,10 +8,17 @@
 [ext_resource path="res://addons/godot-gif-getter/GifGetterUI.tscn" type="PackedScene" id=6]
 [ext_resource path="res://package/throw_package.gd" type="Script" id=7]
 [ext_resource path="res://package/package1.tscn" type="PackedScene" id=8]
-[ext_resource path="res://ui/icons/Circle_(transparent).svg" type="Texture" id=9]
+[ext_resource path="res://ui/mini_map.gd" type="Script" id=9]
+[ext_resource path="res://ui/icons/map_outline.png" type="Texture" id=10]
+[ext_resource path="res://ui/icons/player_marker.png" type="Texture" id=11]
+[ext_resource path="res://ui/icons/delivery_icon.png" type="Texture" id=13]
+[ext_resource path="res://ui/icons/map_mask.png" type="Texture" id=14]
 
 [sub_resource type="SpatialMaterial" id=1]
 albedo_color = Color( 0.027451, 0.847059, 0.968627, 0.34902 )
+
+[sub_resource type="ViewportTexture" id=2]
+viewport_path = NodePath("Viewport")
 
 [node name="Spatial" type="Spatial"]
 
@@ -77,19 +84,54 @@ text = "0/20"
 
 [node name="GifGetterUI" parent="." instance=ExtResource( 6 )]
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-margin_left = 21.0
-margin_top = 862.0
-margin_right = 221.0
-margin_bottom = 1062.0
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 1000, 1000 )
+transparent_bg = true
+render_target_update_mode = 3
+
+[node name="Sprite" type="Sprite" parent="Viewport"]
+texture = ExtResource( 14 )
+centered = false
+offset = Vector2( 250, 250 )
+
+[node name="MiniMap" type="MarginContainer" parent="."]
+anchor_top = 0.619
+anchor_right = 0.208
+anchor_bottom = 1.0
+margin_top = 11.48
+margin_right = 0.639984
 grow_horizontal = 0
-grow_vertical = 0
+script = ExtResource( 9 )
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer"]
-margin_right = 200.0
-margin_bottom = 200.0
-texture = ExtResource( 9 )
+[node name="Frame" type="TextureRect" parent="MiniMap"]
+margin_right = 400.0
+margin_bottom = 400.0
+texture = ExtResource( 10 )
 
-[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
-margin_right = 200.0
-margin_bottom = 200.0
+[node name="Grid" type="MarginContainer" parent="MiniMap"]
+margin_right = 400.0
+margin_bottom = 400.0
+
+[node name="Grid" type="Sprite" parent="MiniMap/Grid"]
+modulate = Color( 0.85098, 0.945098, 0.654902, 1 )
+light_mask = 32
+position = Vector2( 200, 200 )
+scale = Vector2( 0.98, 0.98 )
+texture = ExtResource( 14 )
+
+[node name="Player" type="Sprite" parent="MiniMap/Grid"]
+position = Vector2( 200, 200 )
+z_index = 1
+texture = ExtResource( 11 )
+
+[node name="Delivery" type="Sprite" parent="MiniMap/Grid"]
+visible = false
+light_mask = 32
+position = Vector2( 148, 168 )
+texture = ExtResource( 13 )
+
+[node name="Light2D" type="Light2D" parent="MiniMap/Grid"]
+position = Vector2( 249, 145 )
+texture = SubResource( 2 )
+mode = 3
+range_item_cull_mask = 32

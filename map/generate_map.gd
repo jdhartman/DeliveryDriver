@@ -11,6 +11,7 @@ onready var house6 = preload("res://map/houses/house6.tscn")
 onready var house7 = preload("res://map/houses/house7.tscn")
 
 onready var delivery_tracker = get_node("../DeliveryTracker")
+onready var mini_map = get_node("../MiniMap")
 
 export var map_size = 2
 export var tile_size = 6
@@ -21,6 +22,7 @@ var scalar = 0
 var road_grid = null
 
 var house_scenes = []
+var tiles = []
 var houses = []
 var delivery_zones = []
 
@@ -46,6 +48,7 @@ func _ready():
 
 	calculate_roads()
 	delivery_tracker.add_zones(houses)
+	mini_map.add_houses(houses, tiles)
 	
 	
 func add_tile(i, j):
@@ -55,6 +58,7 @@ func add_tile(i, j):
 	grass_instance.scale = Vector3(scalar, 1, scalar)
 
 	add_child(grass_instance)
+	tiles.append(grass_instance)
 
 	var middle_road = 7#randi() % 16
 	mid_matrix[i].append(middle_road)
