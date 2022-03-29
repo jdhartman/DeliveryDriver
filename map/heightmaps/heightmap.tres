@@ -1,0 +1,6 @@
+[gd_resource type="OpenSimplexNoise" format=2]
+
+[resource]
+seed = 5
+period = 35.8
+persistence = 0.494

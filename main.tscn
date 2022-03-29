@@ -40,6 +40,7 @@ transform = Transform( 0.693749, 0, 0, 0, 0.280707, 0, 0, 0, 0.693749, -8.62463,
 material = SubResource( 1 )
 
 [node name="Car" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.94783, 0 )
 
 [node name="Camera" parent="." instance=ExtResource( 2 )]
 transform = Transform( 0.936779, -0.331514, 0.111998, 0.0163651, 0.361221, 0.932337, -0.349539, -0.87156, 0.34381, 3.35296, 28.0554, 12.5383 )

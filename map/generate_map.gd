@@ -34,6 +34,9 @@ func _ready():
 
 	scalar = tile_size / map_to_road_ratio
 
+	$Floor.transform.origin = Vector3(tile_size / 2 * scalar, -.95, tile_size / 2 * scalar)
+	$Floor.global_scale(Vector3(tile_size, 1, tile_size))
+
 	road_grid = $GridMaps/RoadGridMap
 	house_scenes = [house1, house2, house3, house4, house5, house6, house7]
 
@@ -47,18 +50,15 @@ func _ready():
 			add_tile(i, j)
 
 	calculate_roads()
-	delivery_tracker.add_zones(houses)
-	mini_map.add_houses(houses, tiles)
+
+	if delivery_tracker:
+		delivery_tracker.add_zones(houses)
+
+	if mini_map:
+		mini_map.add_houses(houses, tiles)
 	
 	
 func add_tile(i, j):
-	var grass_instance = grass.instance()
-	
-	grass_instance.transform.origin = Vector3(i * tile_size * 2, 0, j * tile_size * 2)
-	grass_instance.scale = Vector3(scalar, 1, scalar)
-
-	add_child(grass_instance)
-	tiles.append(grass_instance)
 
 	var middle_road = 7#randi() % 16
 	mid_matrix[i].append(middle_road)
