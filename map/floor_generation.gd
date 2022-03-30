@@ -1,33 +1,36 @@
 tool
 extends Spatial
 
+var sn = OpenSimplexNoise.new()
+var st = SurfaceTool.new()
+var mdt = MeshDataTool.new()
+
 func _ready():
-    var surface_tool = SurfaceTool.new()
+    var plane_mesh = PlaneMesh.new()
+    plane_mesh.size = Vector2(2, 2)
+    plane_mesh.subdivide_depth = 32
+    plane_mesh.subdivide_width = 32
 
-    surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+    sn.period = 0.7
 
-    surface_tool.add_normal(Vector3(0, 0, -1))
-    surface_tool.add_color(Color(0, 0, 0, 1))
-    surface_tool.add_vertex(Vector3(-1, 1, 1))
+    st.create_from(plane_mesh, 0)
+    var array_plane = st.commit()
+    mdt.create_from_surface(array_plane, 0)
 
-    surface_tool.add_normal(Vector3(0, 0, -1))
-    surface_tool.add_color(Color(1, 0, 0, 1))
-    surface_tool.add_vertex(Vector3(-1, 0, -1))
+    var error = mdt.create_from_surface(array_plane, 0)
+    for i in range(mdt.get_vertex_count()):
+        var vtx = mdt.get_vertex(i)
+        vtx.y = sn.get_noise_3dv(vtx) * 8
+        mdt.set_vertex(i, vtx)
 
-    surface_tool.add_normal(Vector3(0, 0, -1))
-    surface_tool.add_color(Color(1, 0, 0, 1))
-    surface_tool.add_vertex(Vector3(1, 0, -1))
+    for s in range(array_plane.get_surface_count()):
+        array_plane.surface_remove(s)
 
-    surface_tool.add_normal(Vector3(0, 0, -1))
-    surface_tool.add_color(Color(0, 0, 0, 1))
-    surface_tool.add_vertex(Vector3(1, 1, 1))
+    mdt.commit_to_surface(array_plane)
+    st.create_from(array_plane, 0)
+    st.generate_normals()
+    $StaticBody/FloorMesh.mesh = st.commit()
 
-    surface_tool.add_index(0)
-    surface_tool.add_index(1)
-    surface_tool.add_index(2)
-
-    surface_tool.add_index(0)
-    surface_tool.add_index(2)
-    surface_tool.add_index(3)
-
-    $StaticBody/FloorMesh.mesh = surface_tool.commit()
+    var col_shape = ConcavePolygonShape.new()
+    col_shape.set_faces($StaticBody/FloorMesh.mesh.get_faces())
+    $StaticBody/CollisionShape.set_shape(col_shape)
