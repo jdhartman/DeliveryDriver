@@ -34,10 +34,8 @@ func _ready():
 
 	scalar = tile_size / map_to_road_ratio
 
-	#$Floor.transform.origin = Vector3(tile_size / 2 * scalar + tile_size, -.95, tile_size / 2 * scalar + tile_size)
-	#$Floor.global_scale(Vector3(tile_size, 1, tile_size))
-
-	$Floor.global_scale(Vector3(6, 1, 6))
+	$Floor.transform.origin = Vector3(tile_size / 2 * scalar + tile_size, -.95, tile_size / 2 * scalar + tile_size)
+	$Floor.global_scale(Vector3(tile_size, 1, tile_size))
 
 	road_grid = $GridMaps/RoadGridMap
 	house_scenes = [house1, house2, house3, house4, house5, house6, house7]
@@ -163,7 +161,7 @@ func isRight(m):
 	return m == 1 || m == 3 || m == 7 || m == 8 || m == 10 || m == 11 || m == 12 || m == 13
 
 func createHouse(x, z, house_index, angle):
-	var house_grid_location = road_grid.map_to_world(x, 0, z)
+	var house_grid_location = road_grid.map_to_world(x, 3, z)
 	var house_global_location = road_grid.to_global(house_grid_location)
 
 	var house_instance = house_scenes[house_index].instance()
@@ -173,5 +171,6 @@ func createHouse(x, z, house_index, angle):
 	house_instance.rotate_y(angle)
 
 	add_child(house_instance)
+	house_instance.set_position()
 	houses.append(house_instance)
 		

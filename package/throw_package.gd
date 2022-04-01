@@ -23,8 +23,9 @@ var is_driving = true
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	player.connect("driver_control_change", self, "_on_driver_control_change")
-	player.connect("has_package", self, "_on_player_has_package")
+	if player:
+		player.connect("driver_control_change", self, "_on_driver_control_change")
+		player.connect("has_package", self, "_on_player_has_package")
 
 	thrower = car
 	throw_origin_node = car_throw
@@ -47,7 +48,7 @@ func _on_player_has_package(package: Node):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
-	if not is_driving and not player_package:
+	if (not is_driving and not player_package) or not throw_origin_node:
 		return
 
 	var throw = Input.is_action_just_released("throw")

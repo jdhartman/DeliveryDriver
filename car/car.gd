@@ -27,7 +27,8 @@ var is_driving = true
 func _ready():
 	var driver = $Driver/Bear
 	print(driver)
-	driver.connect("driver_control_change", self, "_on_driver_control_change")
+	if driver:
+		driver.connect("driver_control_change", self, "_on_driver_control_change")
 
 func _on_driver_control_change(_is_driving):
 	is_driving = _is_driving
@@ -42,6 +43,11 @@ func _physics_process(delta):
 	acceleration.y = gravity
 	velocity += acceleration * delta
 	velocity = move_and_slide_with_snap(velocity, -transform.basis.y, Vector3.UP, true)
+	
+	#if $RayCast.is_colliding():
+		#var n = $RayCast.get_collision_normal()
+		#var xform = align_with_y(global_transform, n)
+		#global_transform = global_transform.interpolate_with(xform, 0.4)
 
 
 func apply_friction(delta):
@@ -51,6 +57,12 @@ func apply_friction(delta):
 	var friction_force = velocity * friction * delta
 	var drag_force = velocity * velocity.length() * drag * delta
 	acceleration += drag_force + friction_force
+	
+func align_with_y(xform, new_y):
+	xform.basis.y = new_y.normalized()
+	xform.basis.x = -xform.basis.z.cross(new_y).normalized()
+	xform.basis = xform.basis.orthonormalized()
+	return xform
 	
 func get_car_input():
 	acceleration = Vector3.ZERO

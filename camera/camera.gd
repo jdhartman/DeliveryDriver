@@ -13,7 +13,9 @@ var offset : Vector3
 
 func _ready():
 	offset = transform.origin
-	player.connect("driver_control_change", self, "_on_driver_control_change")
+	
+	if player:
+		player.connect("driver_control_change", self, "_on_driver_control_change")
 	target = car
 
 func _on_driver_control_change(is_driving):
