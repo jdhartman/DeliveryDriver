@@ -35,3 +35,8 @@ collision_mask = 3
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody2"]
 transform = Transform( 1, 0, 0, 0, 0.488043, 0, 0, 0, 1, 0.406781, 2.8034, -5.13972 )
 shape = SubResource( 1 )
+
+[node name="RayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.350798 )
+enabled = true
+cast_to = Vector3( 0, -10, 0 )
