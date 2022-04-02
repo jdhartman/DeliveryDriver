@@ -1,6 +1,8 @@
 extends Spatial
 export(String, DIR) var textures
 
+var position_set = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var files = []
@@ -19,11 +21,12 @@ func _ready():
 		
 	
 func set_position():
-	if not $RayCast or not $RayCast.is_colliding():
+	if not $RayCast or not $RayCast.is_colliding() or position_set:
 		return
 	
 	var n = $RayCast.get_collision_point()
 	global_transform.origin = n
+	position_set = true
 	
 func align_with_y(xform, new_y):
 	xform.basis.y = new_y.normalized()

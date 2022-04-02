@@ -39,6 +39,8 @@ func _ready():
 	$Floor.transform.origin = Vector3(tile_size / 2 * scalar + tile_size, -.95, tile_size / 2 * scalar + tile_size)
 	$Floor.global_scale(Vector3(tile_size, 1, tile_size))
 
+	print ("FLOOORRRR SEEETTTT")
+
 	road_grid = $GridMaps/RoadGridMap
 	house_scenes = [house1, house2, house3, house4, house5, house6, house7]
 
