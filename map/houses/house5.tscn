@@ -15,3 +15,7 @@ transform = Transform( 3, 0, 0, 0, 0.189552, 0, 0, 0, 3, 0, 0, 4.89922 )
 transform = Transform( -2.49332e-09, 0, -0.0570404, 0, 0.0570404, 0, 0.0570404, 0, -2.49332e-09, -0.558052, 0, -2.80691 )
 mesh = ExtResource( 1 )
 material/0 = null
+
+[node name="RayCast" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 0, -10, 0 )

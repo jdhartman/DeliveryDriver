@@ -5,7 +5,11 @@ var sn = OpenSimplexNoise.new()
 var st = SurfaceTool.new()
 var mdt = MeshDataTool.new()
 
+export (SpatialMaterial) var material
+
 func _ready():
+	print($StaticBody/CollisionShape)
+	
 	var plane_mesh = PlaneMesh.new()
 	plane_mesh.size = Vector2(2, 2)
 	plane_mesh.subdivide_depth = 64
@@ -28,7 +32,10 @@ func _ready():
 
 	mdt.commit_to_surface(array_plane)
 	st.create_from(array_plane, 0)
+	
+	st.set_material(material)
 	st.generate_normals(true)
+	
 	$StaticBody/FloorMesh.mesh = st.commit()
 
 	var col_shape = ConcavePolygonShape.new()

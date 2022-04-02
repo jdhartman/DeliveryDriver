@@ -16,16 +16,14 @@ func _ready():
 			files.append(load(textures + "/" + file))
 
 	$MeshInstance.set_surface_material(0, files[randi() % files.size()])
+		
 	
 func set_position():
 	if not $RayCast or not $RayCast.is_colliding():
 		return
 	
 	var n = $RayCast.get_collision_point()
-	print(global_transform.origin)
-	print(n)
 	global_transform.origin = n
-	
 	
 func align_with_y(xform, new_y):
 	xform.basis.y = new_y.normalized()

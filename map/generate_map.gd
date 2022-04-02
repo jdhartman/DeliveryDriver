@@ -28,6 +28,8 @@ var delivery_zones = []
 
 var mid_matrix = []
 
+var house_position_set = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
@@ -171,6 +173,13 @@ func createHouse(x, z, house_index, angle):
 	house_instance.rotate_y(angle)
 
 	add_child(house_instance)
-	house_instance.set_position()
 	houses.append(house_instance)
-		
+
+
+func	 _physics_process(delta):
+	if house_position_set:
+		return
+	house_position_set = true
+	for house in houses:
+		house.set_position()
+	
