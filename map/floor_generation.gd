@@ -1,4 +1,3 @@
-tool
 extends Spatial
 
 var sn = OpenSimplexNoise.new()

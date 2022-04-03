@@ -21,10 +21,13 @@ func _ready():
 		
 	
 func set_position():
+	$RayCast.cast_to = Vector3(0, -1000, 0)
+
 	if not $RayCast or not $RayCast.is_colliding() or position_set:
 		return
 	
 	var n = $RayCast.get_collision_point()
+	$RayCast.enabled = false
 	global_transform.origin = n
 	position_set = true
 	

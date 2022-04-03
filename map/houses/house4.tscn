@@ -15,7 +15,7 @@ script = ExtResource( 3 )
 textures = "res://map/houses/textures"
 
 [node name="DeliveryZone" parent="." instance=ExtResource( 2 )]
-transform = Transform( 3, 0, 0, 0, 0.189552, 0, 0, 0, 3, 0, 0, 4.89922 )
+transform = Transform( 3, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 4.89922 )
 
 [node name="StaticBody" type="StaticBody" parent="."]
 collision_mask = 3

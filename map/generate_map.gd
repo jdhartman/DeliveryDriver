@@ -24,11 +24,13 @@ var road_grid = null
 var house_scenes = []
 var tiles = []
 var houses = []
+
+var unset_houses = []
+var prev_unset_houses = 0
+
 var delivery_zones = []
 
 var mid_matrix = []
-
-var house_position_set = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -75,6 +77,9 @@ func calculate_roads():
 	for i in range(map_size):
 		for j in range(map_size):
 			set_tile_roads(i, j)
+
+	unset_houses = houses
+	print(houses.size())
 
 func set_tile_roads(i, j):
 	var m = mid_matrix[i][j]
@@ -178,10 +183,27 @@ func createHouse(x, z, house_index, angle):
 	houses.append(house_instance)
 
 
-func	 _physics_process(delta):
-	if house_position_set:
+func _physics_process(_delta):
+	if unset_houses.size() == 0 or prev_unset_houses == unset_houses.size():
 		return
-	house_position_set = true
-	for house in houses:
+
+	print("HOUSES UNSET ", unset_houses.size())
+	prev_unset_houses = unset_houses.size()
+	var i = 0
+	var j = 0
+	while i < unset_houses.size():
+		i += 1
+
+		var house = unset_houses[j]
+
 		house.set_position()
+
+		if house.position_set:
+			unset_houses.remove(j)
+		else:
+			j += 1
+
+	 print("HOUSES UNSET ", unset_houses.size())
+
+			
 	
