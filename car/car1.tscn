@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://car/car.gd" type="Script" id=1]
-[ext_resource path="res://player/player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://player/bear1.tscn" type="PackedScene" id=2]
 
 [sub_resource type="BoxShape" id=10]
 
@@ -14,7 +14,6 @@ albedo_color = Color( 0.14902, 0.0156863, 0.0156863, 1 )
 [sub_resource type="BoxShape" id=13]
 
 [node name="Car" type="KinematicBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.837199, 0 )
 collision_layer = 2
 script = ExtResource( 1 )
 engine_power = 15.0
@@ -69,11 +68,12 @@ material = SubResource( 12 )
 [node name="ThrowLeft" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2.36929, -1.45209 )
 
+[node name="Driver" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 2.38419e-07, 0, 1, 0, -2.38419e-07, 0, 1, -0.181886, -0.701527, -0.168716 )
+
 [node name="ThrowRight" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.36929, -1.45209 )
 visible = false
-
-[node name="Driver" parent="." instance=ExtResource( 3 )]
 
 [node name="DriverSeatLocation" type="Spatial" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.388023, 0.117296, -0.423204 )
@@ -86,3 +86,8 @@ transform = Transform( 1.56898, 0, 0, 0, 1.10235, 0, 0, 0, 0.7184, 0, 0.391712, 
 
 [node name="CollisionShape" type="CollisionShape" parent="DriverEnterArea"]
 shape = SubResource( 13 )
+
+[node name="RayCast" type="RayCast" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.03302, -0.199209 )
+enabled = true
+cast_to = Vector3( 0, -2, 0 )

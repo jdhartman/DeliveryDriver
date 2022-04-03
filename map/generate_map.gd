@@ -11,6 +11,7 @@ onready var house6 = preload("res://map/houses/house6.tscn")
 onready var house7 = preload("res://map/houses/house7.tscn")
 
 onready var delivery_tracker = get_node("../DeliveryTracker")
+onready var mini_map = get_node("../MiniMap")
 
 export var map_size = 2
 export var tile_size = 6
@@ -21,7 +22,12 @@ var scalar = 0
 var road_grid = null
 
 var house_scenes = []
+var tiles = []
 var houses = []
+
+var unset_houses = []
+var prev_unset_houses = 0
+
 var delivery_zones = []
 
 var mid_matrix = []
@@ -31,6 +37,11 @@ func _ready():
 	randomize()
 
 	scalar = tile_size / map_to_road_ratio
+
+	$Floor.transform.origin = Vector3(tile_size / 2 * scalar + tile_size, -.95, tile_size / 2 * scalar + tile_size)
+	$Floor.global_scale(Vector3(tile_size, 1, tile_size))
+
+	print ("FLOOORRRR SEEETTTT")
 
 	road_grid = $GridMaps/RoadGridMap
 	house_scenes = [house1, house2, house3, house4, house5, house6, house7]
@@ -45,16 +56,15 @@ func _ready():
 			add_tile(i, j)
 
 	calculate_roads()
-	delivery_tracker.add_zones(houses)
+
+	if delivery_tracker:
+		delivery_tracker.add_zones(houses)
+
+	if mini_map:
+		mini_map.add_houses(houses, tiles)
 	
 	
 func add_tile(i, j):
-	var grass_instance = grass.instance()
-	
-	grass_instance.transform.origin = Vector3(i * tile_size * 2, 0, j * tile_size * 2)
-	grass_instance.scale = Vector3(scalar, 1, scalar)
-
-	add_child(grass_instance)
 
 	var middle_road = 7#randi() % 16
 	mid_matrix[i].append(middle_road)
@@ -67,6 +77,9 @@ func calculate_roads():
 	for i in range(map_size):
 		for j in range(map_size):
 			set_tile_roads(i, j)
+
+	unset_houses = houses
+	print(houses.size())
 
 func set_tile_roads(i, j):
 	var m = mid_matrix[i][j]
@@ -157,7 +170,7 @@ func isRight(m):
 	return m == 1 || m == 3 || m == 7 || m == 8 || m == 10 || m == 11 || m == 12 || m == 13
 
 func createHouse(x, z, house_index, angle):
-	var house_grid_location = road_grid.map_to_world(x, 0, z)
+	var house_grid_location = road_grid.map_to_world(x, 3, z)
 	var house_global_location = road_grid.to_global(house_grid_location)
 
 	var house_instance = house_scenes[house_index].instance()
@@ -168,4 +181,29 @@ func createHouse(x, z, house_index, angle):
 
 	add_child(house_instance)
 	houses.append(house_instance)
-		
+
+
+func _physics_process(_delta):
+	if unset_houses.size() == 0 or prev_unset_houses == unset_houses.size():
+		return
+
+	print("HOUSES UNSET ", unset_houses.size())
+	prev_unset_houses = unset_houses.size()
+	var i = 0
+	var j = 0
+	while i < unset_houses.size():
+		i += 1
+
+		var house = unset_houses[j]
+
+		house.set_position()
+
+		if house.position_set:
+			unset_houses.remove(j)
+		else:
+			j += 1
+
+	 print("HOUSES UNSET ", unset_houses.size())
+
+			
+	

@@ -1,18 +1,32 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://map/houses/meshes/house7.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://package/house_delivery_zone.tscn" type="PackedScene" id=2]
 [ext_resource path="res://map/houses/house_generation.gd" type="Script" id=3]
-[ext_resource path="res://map/houses/textures/texture3.tres" type="Material" id=4]
+[ext_resource path="res://map/houses/textures/texture1.tres" type="Material" id=4]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 4.06021, 5.80913, 4.49751 )
 
 [node name="Spatial" type="Spatial"]
 script = ExtResource( 3 )
 textures = "res://map/houses/textures"
 
 [node name="DeliveryZone" parent="." instance=ExtResource( 2 )]
-transform = Transform( 3, 0, 0, 0, 0.189552, 0, 0, 0, 3, 0, 0, 4.89922 )
+transform = Transform( 3, 0, 0, 0, 2, 0, 0, 0, 3, 0, 0, 4.89922 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( -2.49332e-09, 0, -0.0570404, 0, 0.0570404, 0, 0.0570404, 0, -2.49332e-09, 0, 0, -6.79288 )
+transform = Transform( -2.49332e-09, 0, -0.0570404, 0, 0.0570404, 0, 0.0570404, 0, -2.49332e-09, 39.0627, 0, -6.79288 )
 mesh = ExtResource( 1 )
 material/0 = ExtResource( 4 )
+material/1 = ExtResource( 4 )
+
+[node name="RayCast" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 0, -10, 0 )
+
+[node name="StaticBody" type="StaticBody" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.859654, 6.06962, -5.57768 )
+shape = SubResource( 1 )

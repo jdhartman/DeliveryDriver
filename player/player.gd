@@ -4,13 +4,13 @@ extends KinematicBody
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-onready var car = get_parent()
-onready var driver_seat = get_parent().get_node("DriverSeatLocation")
-onready var driver_exit = get_parent().get_node("DriverExitLocation")
-onready var driver_enter_area = get_parent().get_node("DriverEnterArea")
+onready var car = get_parent().get_parent()
+onready var driver_seat = car.get_node("DriverSeatLocation")
+onready var driver_exit = car.get_node("DriverExitLocation")
+onready var driver_enter_area = car.get_node("DriverEnterArea")
 onready var scene_root =  get_tree().root.get_children()[0]
 
-var is_driving = true;
+export var is_driving = true
 var has_exited_car = false
 export var traction_fast = 0.02
 export var friction = -4.0
@@ -33,10 +33,12 @@ var current_package: RigidBody
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-	transform.origin = driver_seat.transform.origin
 
-	driver_enter_area.connect("body_entered", self, "_on_driver_enter")
-	driver_enter_area.connect("body_exited", self, "_on_driver_exit")
+	if driver_enter_area:
+		transform.origin = driver_seat.transform.origin
+
+		driver_enter_area.connect("body_entered", self, "_on_driver_enter")
+		driver_enter_area.connect("body_exited", self, "_on_driver_exit")
 	
 	var throw_manager = scene_root.get_node("ThrowTarget")
 
@@ -71,8 +73,6 @@ func _physics_process(delta):
 	
 		velocity += acceleration * delta
 		velocity = move_and_slide_with_snap(velocity, -transform.basis.y, Vector3.UP, true)
-	
-
 
 func get_input():
 	if Input.is_action_just_released("eject") && is_driving:
@@ -94,7 +94,6 @@ func get_input():
 	
 	target_turn = Vector3(x, max(abs(x) - .9, 0) + max(abs(z) - .9, 0), z).normalized()
 
-
 func eject():
 	car.remove_child(self)
 	scene_root.add_child(self)
@@ -115,10 +114,14 @@ func get_movement(delta):
 
 	velocity = lerp(velocity, target_turn * velocity.length(), traction)
 
+	$Targets/Target_Reset_Left.transform.origin.z = velocity.length()
+	$Targets/Target_Reset_Left.transform.origin.y = -3.5 + velocity.length() / 5
+	$Targets/Target_Reset_Right.transform.origin.z = velocity.length()
+	$Targets/Target_Reset_Right.transform.origin.y = -3.5 + velocity.length() / 5
+
 	if target_turn.length() > 0:
 		var new_transform = transform.looking_at(transform.origin + target_turn, Vector3.UP)
 		transform = transform.interpolate_with(new_transform, turn_limit * delta)
-
 
 func _on_package_entered(body: Node):
 	if body.get_parent().get_instance_id() == self.get_instance_id():
