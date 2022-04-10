@@ -44,10 +44,12 @@ func _physics_process(delta):
 	velocity += acceleration * delta
 	velocity = move_and_slide_with_snap(velocity, -transform.basis.y, Vector3.UP, true)
 	
-	#if $RayCast.is_colliding():
-		#var n = $RayCast.get_collision_normal()
-		#var xform = align_with_y(global_transform, n)
-		#global_transform = global_transform.interpolate_with(xform, 0.4)
+
+	if $RayCast.is_colliding():
+		var n = $RayCast.get_collision_normal()
+		var xform = align_with_y(global_transform, n)
+		global_transform = global_transform.interpolate_with(xform, 0.4)
+			
 
 
 func apply_friction(delta):

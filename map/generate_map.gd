@@ -185,6 +185,11 @@ func createHouse(x, z, house_index, angle):
 
 func _physics_process(_delta):
 	if unset_houses.size() == 0 or prev_unset_houses == unset_houses.size():
+		for house in unset_houses:
+			house.visible = false
+		
+		unset_houses.clear()
+
 		return
 
 	print("HOUSES UNSET ", unset_houses.size())

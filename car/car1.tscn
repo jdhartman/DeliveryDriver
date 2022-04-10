@@ -2,16 +2,14 @@
 
 [ext_resource path="res://car/car.gd" type="Script" id=1]
 [ext_resource path="res://player/bear1.tscn" type="PackedScene" id=2]
-
-[sub_resource type="BoxShape" id=10]
+[ext_resource path="res://car/meshes/car.obj" type="ArrayMesh" id=3]
 
 [sub_resource type="SpatialMaterial" id=11]
 albedo_color = Color( 0, 0, 0, 1 )
 
-[sub_resource type="SpatialMaterial" id=12]
-albedo_color = Color( 0.14902, 0.0156863, 0.0156863, 1 )
-
 [sub_resource type="BoxShape" id=13]
+
+[sub_resource type="BoxShape" id=14]
 
 [node name="Car" type="KinematicBody"]
 collision_layer = 2
@@ -21,52 +19,28 @@ friction = -5.0
 max_speed_reverse = 5.0
 slip_speed = 20.0
 
-[node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, 1.2883, 0, 0, 0, 0.835079, 0, 0.0607635, 0.830762 )
-shape = SubResource( 10 )
-
-[node name="CSGBox" type="CSGBox" parent="CollisionShape"]
-visible = false
-
-[node name="CollisionShape2" type="CollisionShape" parent="."]
-transform = Transform( 0.776973, 0, 0, 0, 0.535955, 0, 0, 0, 0.930961, 0, -0.449122, -0.948738 )
-shape = SubResource( 10 )
-
-[node name="CSGBox" type="CSGBox" parent="CollisionShape2"]
-visible = false
-
-[node name="CSGCylinder2" type="CSGCylinder" parent="."]
-transform = Transform( -1.76818e-08, 0.120595, 0, -0.404511, -5.27138e-09, 0, 0, 0, 0.405079, -0.78197, -0.790993, 1.22649 )
-sides = 12
-material = SubResource( 11 )
-
-[node name="CSGCylinder3" type="CSGCylinder" parent="."]
-transform = Transform( -1.76818e-08, 0.120595, 0, -0.404511, -5.27138e-09, 0, 0, 0, 0.405079, 0.77484, -0.790993, 1.22649 )
-sides = 12
-material = SubResource( 11 )
-
 [node name="Wheel_FL" type="CSGCylinder" parent="."]
-transform = Transform( -1.76818e-08, 0.120595, 0, -0.404511, -5.27138e-09, 0, 0, 0, 0.405079, -0.78197, -0.790993, -1.25686 )
+transform = Transform( -2.24201e-08, 0.152912, 0, -0.512911, -6.68399e-09, 0, 0, 0, 0.513631, -1.60208, -0.516178, -0.318201 )
 sides = 12
 material = SubResource( 11 )
 
 [node name="Wheel_FR" type="CSGCylinder" parent="."]
-transform = Transform( -1.76818e-08, 0.120595, 0, -0.404511, -5.27138e-09, 0, 0, 0, 0.405079, 0.77484, -0.790993, -1.25686 )
+transform = Transform( -2.24201e-08, 0.152912, 0, -0.512911, -6.68399e-09, 0, 0, 0, 0.513631, 1.52958, -0.540488, -0.35503 )
 sides = 12
 material = SubResource( 11 )
 
-[node name="CSGBox" type="CSGBox" parent="."]
-transform = Transform( 0.76312, 0, 0, 0, 0.611395, 0, 0, 0, 1.72214, 0.00290489, -0.459411, -0.0175992 )
-height = 1.8874
-material = SubResource( 12 )
+[node name="Wheel_BL" type="CSGCylinder" parent="."]
+transform = Transform( -2.24201e-08, 0.152912, 0, -0.512911, -6.68399e-09, 0, 0, 0, 0.513631, -1.60208, -0.516178, 3.97173 )
+sides = 12
+material = SubResource( 11 )
 
-[node name="CSGBox2" type="CSGBox" parent="."]
-transform = Transform( 0.76312, 0, 0, 0, 0.662839, 0, 0, 0, 0.839634, -0.0206513, 0.729631, 0.839438 )
-height = 1.8874
-material = SubResource( 12 )
+[node name="Wheel_BR" type="CSGCylinder" parent="."]
+transform = Transform( -2.24201e-08, 0.152912, 0, -0.512911, -6.68399e-09, 0, 0, 0, 0.513631, 1.52958, -0.540488, 3.9349 )
+sides = 12
+material = SubResource( 11 )
 
 [node name="ThrowLeft" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2.36929, -1.45209 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -2.81927, 2.89888, -1.45209 )
 
 [node name="Driver" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 2.38419e-07, 0, 1, 0, -2.38419e-07, 0, 1, -0.181886, -0.701527, -0.168716 )
@@ -91,3 +65,15 @@ shape = SubResource( 13 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.03302, -0.199209 )
 enabled = true
 cast_to = Vector3( 0, -2, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( -1.97661e-08, 0, 0.452195, 0, 0.452195, 0, -0.452195, 0, -1.97661e-08, 0, -0.196251, 2.08219 )
+mesh = ExtResource( 3 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1.18814, 0, 0, 0, 1.8098, 0, 0, 0, 2.16312, 0, 0.711078, 2.55835 )
+shape = SubResource( 14 )
+
+[node name="CSGBox" type="CSGBox" parent="CollisionShape"]
+visible = false
