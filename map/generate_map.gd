@@ -37,9 +37,11 @@ func _ready():
 	randomize()
 
 	scalar = tile_size / map_to_road_ratio
+	print(scalar)
 
 	$Floor.transform.origin = Vector3(tile_size / 2 * scalar + tile_size, -.95, tile_size / 2 * scalar + tile_size)
-	$Floor.global_scale(Vector3(tile_size, 1, tile_size))
+	$Floor.size = scalar * 72
+	$Floor.generate_mesh()
 
 	print ("FLOOORRRR SEEETTTT")
 
@@ -187,6 +189,10 @@ func _physics_process(_delta):
 	if unset_houses.size() == 0 or prev_unset_houses == unset_houses.size():
 		for house in unset_houses:
 			house.visible = false
+			for child in house.get_children():
+				if child is StaticBody:
+					child.collision_layer = 0
+					child.collision_mask = 0
 		
 		unset_houses.clear()
 
