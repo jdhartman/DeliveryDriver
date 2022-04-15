@@ -1,0 +1,138 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://car/car1.tscn" type="PackedScene" id=1]
+[ext_resource path="res://camera/camera.tscn" type="PackedScene" id=2]
+[ext_resource path="res://map/terrain/neighborhood1.tscn" type="PackedScene" id=3]
+[ext_resource path="res://ui/ui_controller.gd" type="Script" id=4]
+[ext_resource path="res://package/delivery_tracker.gd" type="Script" id=5]
+[ext_resource path="res://addons/godot-gif-getter/GifGetterUI.tscn" type="PackedScene" id=6]
+[ext_resource path="res://package/throw_package.gd" type="Script" id=7]
+[ext_resource path="res://package/package1.tscn" type="PackedScene" id=8]
+[ext_resource path="res://ui/mini_map.gd" type="Script" id=9]
+[ext_resource path="res://ui/icons/map_outline.png" type="Texture" id=10]
+[ext_resource path="res://ui/icons/player_marker.png" type="Texture" id=11]
+[ext_resource path="res://ui/icons/delivery_icon.png" type="Texture" id=13]
+[ext_resource path="res://ui/icons/map_mask.png" type="Texture" id=14]
+
+[sub_resource type="SpatialMaterial" id=1]
+albedo_color = Color( 0.027451, 0.847059, 0.968627, 0.34902 )
+
+[sub_resource type="ViewportTexture" id=2]
+viewport_path = NodePath("Viewport")
+
+[node name="Spatial" type="Spatial"]
+
+[node name="MapGeneration" parent="." instance=ExtResource( 3 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0354681, -0.0181942, -0.0412941 )
+map_size = 6
+tile_size = 48
+
+[node name="DeliveryTracker" type="Spatial" parent="."]
+script = ExtResource( 5 )
+total = 50
+
+[node name="ThrowTarget" type="Spatial" parent="."]
+script = ExtResource( 7 )
+package_scene = ExtResource( 8 )
+
+[node name="ThrowLeftTarget" type="CSGCylinder" parent="ThrowTarget"]
+transform = Transform( 0.693749, 0, 0, 0, 0.280707, 0, 0, 0, 0.693749, -8.62463, 0, -4.86412 )
+material = SubResource( 1 )
+
+[node name="Car" parent="." instance=ExtResource( 1 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.94783, 0 )
+
+[node name="Camera" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.936779, -0.331514, 0.111998, 0.0163651, 0.361221, 0.932337, -0.349539, -0.87156, 0.34381, 5.01553, 44.888, 19.2279 )
+projection = 0
+current = true
+fov = 61.1
+
+[node name="FPSContainer" type="MarginContainer" parent="."]
+margin_left = 1862.0
+margin_top = 2.0
+margin_right = 1902.0
+margin_bottom = 42.0
+
+[node name="Label" type="Label" parent="FPSContainer"]
+margin_top = 13.0
+margin_right = 40.0
+margin_bottom = 27.0
+
+[node name="UIController" type="MarginContainer" parent="."]
+margin_left = 9.0
+margin_top = 1.0
+margin_right = 111.0
+margin_bottom = 41.0
+script = ExtResource( 4 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UIController"]
+margin_right = 102.0
+margin_bottom = 40.0
+
+[node name="Label" type="Label" parent="UIController/HBoxContainer"]
+margin_top = 13.0
+margin_right = 69.0
+margin_bottom = 27.0
+text = "Deliveries "
+
+[node name="Label2" type="Label" parent="UIController/HBoxContainer"]
+margin_left = 73.0
+margin_top = 13.0
+margin_right = 102.0
+margin_bottom = 27.0
+text = "0/20"
+
+[node name="GifGetterUI" parent="." instance=ExtResource( 6 )]
+
+[node name="Viewport" type="Viewport" parent="."]
+size = Vector2( 1000, 1000 )
+transparent_bg = true
+render_target_update_mode = 3
+
+[node name="Sprite" type="Sprite" parent="Viewport"]
+texture = ExtResource( 14 )
+centered = false
+offset = Vector2( 250, 250 )
+
+[node name="MiniMap" type="MarginContainer" parent="."]
+anchor_top = 0.619
+anchor_right = 0.208
+anchor_bottom = 1.0
+margin_top = 11.48
+margin_right = 0.639984
+grow_horizontal = 0
+script = ExtResource( 9 )
+
+[node name="Frame" type="TextureRect" parent="MiniMap"]
+margin_right = 400.0
+margin_bottom = 400.0
+texture = ExtResource( 10 )
+
+[node name="Grid" type="MarginContainer" parent="MiniMap"]
+margin_right = 400.0
+margin_bottom = 400.0
+
+[node name="Grid" type="Sprite" parent="MiniMap/Grid"]
+modulate = Color( 0.85098, 0.945098, 0.654902, 1 )
+light_mask = 32
+position = Vector2( 200, 200 )
+scale = Vector2( 0.98, 0.98 )
+texture = ExtResource( 14 )
+
+[node name="Player" type="Sprite" parent="MiniMap/Grid"]
+position = Vector2( 200, 200 )
+z_index = 1
+texture = ExtResource( 11 )
+
+[node name="Delivery" type="Sprite" parent="MiniMap/Grid"]
+visible = false
+light_mask = 32
+position = Vector2( 148, 168 )
+texture = ExtResource( 13 )
+
+[node name="Light2D" type="Light2D" parent="MiniMap/Grid"]
+position = Vector2( 249, 145 )
+texture = SubResource( 2 )
+mode = 3
+range_item_cull_mask = 32
