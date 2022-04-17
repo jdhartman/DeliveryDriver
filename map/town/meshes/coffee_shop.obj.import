@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/coffee_shop.obj-3e73ae9494c5270c2f3cb8c7b26477e7.mesh"
+
+[deps]
+
+files=[ "res://.import/coffee_shop.obj-3e73ae9494c5270c2f3cb8c7b26477e7.mesh" ]
+
+source_file="res://map/town/meshes/coffee_shop.obj"
+dest_files=[ "res://.import/coffee_shop.obj-3e73ae9494c5270c2f3cb8c7b26477e7.mesh", "res://.import/coffee_shop.obj-3e73ae9494c5270c2f3cb8c7b26477e7.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286
