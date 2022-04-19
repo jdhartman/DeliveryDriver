@@ -16,7 +16,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.95, 3 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.95, 1 )
 
 [node name="RoadGridMap" type="GridMap" parent="GridMaps"]
-visible = false
 mesh_library = ExtResource( 2 )
 data = {
 "cells": PoolIntArray(  )

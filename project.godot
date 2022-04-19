@@ -18,6 +18,10 @@ run/main_scene="res://main.tscn"
 window/size/width=1920
 window/size/height=1080
 
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/scatter/plugin.cfg" )
+
 [global]
 
 main=false

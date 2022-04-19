@@ -26,9 +26,12 @@ func set_position():
 	if not $RayCast or not $RayCast.is_colliding() or position_set:
 		return
 	
-	var n = $RayCast.get_collision_point()
+	var c = $RayCast.get_collision_point()
+	var n = $RayCast.get_collision_normal()
 	$RayCast.enabled = false
-	global_transform.origin = n
+
+	global_transform.origin = c
+	global_transform = align_with_y(global_transform, n)
 	position_set = true
 	
 func align_with_y(xform, new_y):

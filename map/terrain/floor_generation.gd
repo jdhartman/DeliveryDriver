@@ -17,7 +17,7 @@ func _ready():
 func generate_mesh():
 	print($StaticBody/CollisionShape)
 	$DebugNormals.clear()
-	
+
 	var plane_mesh = PlaneMesh.new()
 	plane_mesh.size = Vector2(size, size)
 	plane_mesh.subdivide_depth = subdivide

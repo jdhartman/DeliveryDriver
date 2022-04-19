@@ -132,7 +132,7 @@ position = Vector2( 148, 168 )
 texture = ExtResource( 13 )
 
 [node name="Light2D" type="Light2D" parent="MiniMap/Grid"]
-position = Vector2( 249, 145 )
+position = Vector2( 248, 145 )
 texture = SubResource( 2 )
 mode = 3
 range_item_cull_mask = 32

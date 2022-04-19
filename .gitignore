@@ -14,3 +14,5 @@ rust/target/
 *.blend1
 
 .DS_Store
+
+addons/scatter/demos/
