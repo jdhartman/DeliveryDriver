@@ -79,7 +79,6 @@ func generate_normals():
 	# set color to normal.
 	for i in range(mdt.get_vertex_count()):
 		var v = mdt.get_vertex_normal(i).normalized()
-		print(v)
 		mdt.set_vertex_normal(i, v)
 		mdt.set_vertex_color(i, Color(v.x, v.y, v.z))	
 	
@@ -98,7 +97,6 @@ func draw_normals(array_plane):
 		var center = (ap + bp + cp) / 3
 		
 		var normal = mdt.get_face_normal(i) + center
-		print(normal)
 		
 		$DebugNormals.begin(Mesh.PRIMITIVE_LINE_STRIP)
 		$DebugNormals.set_color(Color.purple)
