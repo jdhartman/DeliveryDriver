@@ -10,6 +10,8 @@ onready var house5 = preload("res://map/houses/scenes/house5.tscn")
 onready var house6 = preload("res://map/houses/scenes/house6.tscn")
 onready var house7 = preload("res://map/houses/scenes/house7.tscn")
 
+onready var road1 = preload("res://roads/up_down_road.tscn")
+
 onready var delivery_tracker = get_node("../DeliveryTracker")
 onready var mini_map = get_node("../MiniMap")
 
@@ -23,10 +25,14 @@ var road_grid = null
 
 var house_scenes = []
 var tiles = []
-var houses = []
 
+var houses = []
 var unset_houses = []
 var prev_unset_houses = 0
+
+var roads = []
+var unset_roads = []
+var prev_unset_roads = 0
 
 var delivery_zones = []
 
@@ -39,7 +45,7 @@ func _ready():
 	scalar = tile_size / map_to_road_ratio
 	print(scalar)
 
-	$Floor.transform.origin = Vector3(tile_size / 2 * scalar + tile_size, -.95, tile_size / 2 * scalar + tile_size)
+	#$Floor.transform.origin = Vector3(tile_size / 2 * scalar + tile_size, -.95, tile_size / 2 * scalar + tile_size)
 	$Floor.size = scalar * 72
 	$Floor.generate_mesh()
 
@@ -48,7 +54,7 @@ func _ready():
 	road_grid = $GridMaps/RoadGridMap
 	house_scenes = [house1, house2, house3, house4, house5, house6, house7]
 
-	$GridMaps.transform.origin = Vector3(scalar,-.95, scalar)
+	$GridMaps.transform.origin = Vector3(tile_size / 2 * -scalar - tile_size / 2, -.95, tile_size / 2 * -scalar - tile_size / 2)
 	$GridMaps.global_scale(Vector3(scalar, 1, scalar))
 
 	for i in range(map_size):
@@ -81,7 +87,7 @@ func calculate_roads():
 			set_tile_roads(i, j)
 
 	unset_houses = houses
-	print(houses.size())
+	unset_roads = roads
 
 func set_tile_roads(i, j):
 	var m = mid_matrix[i][j]
@@ -116,48 +122,16 @@ func set_tile_roads(i, j):
 	]
 
 	if isUp(m):
-		road_grid.set_cell_item(-1 + x_scalar, 0, -3 + z_scalar, 0)
-		for location in up_locations:
-			if (randf() > house_probability):
-				continue
-			createHouse(
-				location.x + x_scalar,
-				location.y + z_scalar,
-				randi() % house_scenes.size(),
-				location.z)
+		createStreet(Vector3(-1, 0, -3), Vector2(x_scalar, z_scalar), up_locations, 0)
 
 	if isDown(m):
-		road_grid.set_cell_item(-1 + x_scalar, 0, 1 + z_scalar, 0)
-		for location in down_locations:
-			if (randf() > house_probability):
-				continue
-			createHouse(
-				location.x + x_scalar,
-				location.y + z_scalar,
-				randi() % house_scenes.size(),
-				location.z)
+		createStreet(Vector3(-1, 0, 1), Vector2(x_scalar, z_scalar), down_locations, 0)
 
 	if isLeft(m):
-		road_grid.set_cell_item(-3 + x_scalar, 0, -1 + z_scalar, 12)
-		for location in left_locations:
-			if (randf() > house_probability):
-				continue
-			createHouse(
-				location.x + x_scalar,
-				location.y + z_scalar,
-				randi() % house_scenes.size(),
-				location.z)
+		createStreet(Vector3(-3, 0, -1), Vector2(x_scalar, z_scalar), left_locations, 12)
 	
 	if isRight(m):
-		road_grid.set_cell_item(1 + x_scalar, 0, -1 + z_scalar, 12)
-		for location in right_locations:
-			if (randf() > house_probability):
-				continue
-			createHouse(
-				location.x + x_scalar,
-				location.y + z_scalar,
-				randi() % house_scenes.size(),
-				location.z)
+		createStreet(Vector3(1, 0, -1), Vector2(x_scalar, z_scalar), right_locations, 12)
 
 func isUp(m):
 	return  m == 0 || m == 3 || m == 4 || m == 6 || m == 7 || m == 8 || m == 9 || m == 10
@@ -170,6 +144,38 @@ func isLeft(m):
 
 func isRight(m):
 	return m == 1 || m == 3 || m == 7 || m == 8 || m == 10 || m == 11 || m == 12 || m == 13
+
+func createStreet(road_position: Vector3, scalars: Vector2, house_locations: Array, road_piece: int = 0):
+
+	var x_scalar = scalars.x
+	var z_scalar = scalars.y
+
+	createRoad(road_position, x_scalar, z_scalar, road_piece)
+
+	for location in house_locations:
+		if (randf() > 1):
+			continue
+		createHouse(
+			location.x + x_scalar,
+			location.y + z_scalar,
+			randi() % house_scenes.size(),
+			location.z)
+
+
+func createRoad(road_position: Vector3, x_scalar: int, z_scalar: int, road_piece: int):
+
+	var road_grid_location = road_grid.map_to_world(road_position.x + x_scalar, road_position.y + 10, road_position.z + z_scalar)
+	var road_global_location = road_grid.to_global(road_grid_location)
+
+	var road_instance = road1.instance()
+
+	road_instance.translation = road_global_location
+
+	if road_piece == 0:
+		road_instance.rotate_y(PI / 2)
+
+	add_child(road_instance)
+	roads.append(road_instance)
 
 func createHouse(x, z, house_index, angle):
 	var house_grid_location = road_grid.map_to_world(x, 3, z)
@@ -186,6 +192,11 @@ func createHouse(x, z, house_index, angle):
 
 
 func _physics_process(_delta):
+	raycast_houses()
+	raycast_roads()
+		
+
+func raycast_houses():
 	if unset_houses.size() == 0 or prev_unset_houses == unset_houses.size():
 		for house in unset_houses:
 			house.visible = false
@@ -213,8 +224,24 @@ func _physics_process(_delta):
 			unset_houses.remove(j)
 		else:
 			j += 1
-
-	 print("HOUSES UNSET ", unset_houses.size())
-
-			
 	
+func raycast_roads():
+	if unset_roads.size() == 0:
+		return
+
+	print("ROADS UNSET ", unset_roads.size())
+	prev_unset_roads = unset_roads.size()
+	var i = 0
+	var j = 0
+	while i < unset_roads.size():
+		i += 1
+
+		var road = unset_roads[j]
+
+		road.set_position()
+
+		if road.position_set:
+			unset_roads.remove(j)
+		else:
+			j += 1
+			

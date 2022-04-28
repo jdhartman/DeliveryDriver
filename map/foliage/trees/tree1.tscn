@@ -1,8 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://map/foliage/meshes/tree1.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://map/foliage/textures/tree_texture1.png" type="Texture" id=2]
 
 [sub_resource type="SpatialMaterial" id=1]
+albedo_texture = ExtResource( 2 )
+
+[sub_resource type="CylinderShape" id=2]
+height = 2.94919
 
 [node name="Spatial" type="Spatial"]
 
@@ -10,3 +15,10 @@
 transform = Transform( 0.240846, 0, 0, 0, 0.240846, 0, 0, 0, 0.240846, -68.349, -1.61714, -17.8317 )
 mesh = ExtResource( 1 )
 material/0 = SubResource( 1 )
+
+[node name="StaticBody" type="StaticBody" parent="."]
+transform = Transform( 1.10125, 0, 0, 0, 1.10125, 0, 0, 0, 1.10125, -2.09539, 0.127293, -2.52318 )
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+transform = Transform( 0.839129, 0, 0, 0, 1.59154, 0, 0, 0, 0.839129, 0.128568, 0.84208, 0.223773 )
+shape = SubResource( 2 )

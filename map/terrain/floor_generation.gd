@@ -4,14 +4,18 @@ extends Spatial
 var sn = OpenSimplexNoise.new()
 var st = SurfaceTool.new()
 var mdt = MeshDataTool.new()
+var map_seed = 0
 
 export (SpatialMaterial) var material
 export var period = 0.7
 export var noise_height = 20
 export var size = 2 
-export var subdivide = 64
+export var subdivide = 6
+
+var road_set = false
 
 func _ready():
+	map_seed = randi()
 	generate_mesh()
 	
 func generate_mesh():
@@ -24,7 +28,7 @@ func generate_mesh():
 	plane_mesh.subdivide_width = subdivide
 
 	sn.period = period
-	sn.seed = randi()
+	sn.seed = map_seed
 
 	var array_plane = ArrayMesh.new()
 	array_plane.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, plane_mesh.get_mesh_arrays())
@@ -48,13 +52,39 @@ func generate_mesh():
 	st.add_smooth_group(true)
 	st.append_from(array_plane, 0, Transform.IDENTITY)
 	
-	#draw_normals(array_plane)
-	
 	$StaticBody/FloorMesh.mesh = st.commit()
 
 	var col_shape = ConcavePolygonShape.new()
 	col_shape.set_faces($StaticBody/FloorMesh.mesh.get_faces())
 	$StaticBody/CollisionShape.set_shape(col_shape)
+
+
+func deform_road_to_mesh(road):
+	print ("DEFORM ROAD")
+	$RayCast.global_transform.origin = road.global_transform.origin
+	$RayCast.cast_to = Vector3(0, -1000, 0)
+
+	if not $RayCast or not $RayCast.is_colliding():
+		print ("Road not deforming:/")
+		return
+	
+
+	print("DEFORMING")
+	var c = $RayCast.get_collision_point()
+	print(c)
+	var n = $RayCast.get_collision_normal()
+	$RayCast.enabled = false
+
+	road.global_transform.origin = c
+	road.global_transform = align_with_y(global_transform, n)
+	road_set = true
+	
+func align_with_y(xform, new_y):
+	xform.basis.y = new_y.normalized()
+	xform.basis.x = -xform.basis.z.cross(new_y).normalized()
+	xform.basis = xform.basis.orthonormalized()
+	return xform	
+
 	
 func generate_normals():
 	# Calculate vertex normals, face-by-face.
