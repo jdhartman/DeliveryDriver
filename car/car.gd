@@ -48,9 +48,7 @@ func _physics_process(delta):
 	if $RayCast.is_colliding():
 		var n = $RayCast.get_collision_normal()
 		var xform = align_with_y(global_transform, n)
-		global_transform = global_transform.interpolate_with(xform, 0.4)
-			
-
+		global_transform = global_transform.interpolate_with(xform, 0.4)	
 
 func apply_friction(delta):
 	if velocity.length() < .8 and acceleration.length() == 0:

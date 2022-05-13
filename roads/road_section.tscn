@@ -1,11 +1,6 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene format=2]
 
-[sub_resource type="CubeMesh" id=1]
-size = Vector3( 11, 0.5, 10 )
-
-[node name="Road" type="MeshInstance"]
-mesh = SubResource( 1 )
-material/0 = null
+[node name="Road" type="Spatial"]
 
 [node name="Back" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1 )

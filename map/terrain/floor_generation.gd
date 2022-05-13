@@ -13,10 +13,11 @@ export var size = 2
 export var subdivide = 6
 
 var road_set = false
+var town_aabb: AABB
+var town: Spatial
 
 func _ready():
 	map_seed = randi()
-	generate_mesh()
 	
 func generate_mesh():
 	print($StaticBody/CollisionShape)
@@ -37,7 +38,9 @@ func generate_mesh():
 
 	for i in range(mdt.get_vertex_count()):
 		var vertex = mdt.get_vertex(i)
-		vertex.y = sn.get_noise_3dv(vertex) * noise_height
+		var v = to_global(vertex)
+		if not town_aabb.has_point(town.to_local(v)):
+			vertex.y = sn.get_noise_3dv(vertex) * noise_height
 		mdt.set_vertex(i, vertex)
 	
 	generate_normals()
@@ -57,7 +60,6 @@ func generate_mesh():
 	var col_shape = ConcavePolygonShape.new()
 	col_shape.set_faces($StaticBody/FloorMesh.mesh.get_faces())
 	$StaticBody/CollisionShape.set_shape(col_shape)
-
 
 func deform_road_to_mesh(road):
 	print ("DEFORM ROAD")

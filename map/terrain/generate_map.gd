@@ -11,6 +11,7 @@ onready var house6 = preload("res://map/houses/scenes/house6.tscn")
 onready var house7 = preload("res://map/houses/scenes/house7.tscn")
 
 onready var road1 = preload("res://roads/up_down_road.tscn")
+onready var intersection = preload("res://roads/intersection.tscn")
 
 onready var delivery_tracker = get_node("../DeliveryTracker")
 onready var mini_map = get_node("../MiniMap")
@@ -37,25 +38,32 @@ var prev_unset_roads = 0
 var delivery_zones = []
 
 var mid_matrix = []
+var town_center: Vector2
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
 
+	road_grid = $GridMaps/RoadGridMap
+	house_scenes = [house1, house2, house3, house4, house5, house6, house7]
 	scalar = tile_size / map_to_road_ratio
 	print(scalar)
 
-	#$Floor.transform.origin = Vector3(tile_size / 2 * scalar + tile_size, -.95, tile_size / 2 * scalar + tile_size)
-	$Floor.size = scalar * 72
-	$Floor.generate_mesh()
-
-	print ("FLOOORRRR SEEETTTT")
-
-	road_grid = $GridMaps/RoadGridMap
-	house_scenes = [house1, house2, house3, house4, house5, house6, house7]
-
 	$GridMaps.transform.origin = Vector3(tile_size / 2 * -scalar - tile_size / 2, -.95, tile_size / 2 * -scalar - tile_size / 2)
 	$GridMaps.global_scale(Vector3(scalar, 1, scalar))
+
+	town_center = Vector2((randi() % (map_size - 1)) + 1, (randi() % (map_size - 1)) + 1)
+	print(town_center)
+	var grid_location = road_grid.map_to_world(-1 + town_center.x * map_to_road_ratio, 0, -1 + town_center.y * map_to_road_ratio)
+	var global_location = road_grid.to_global(grid_location)
+
+	$TownMesh.global_transform.origin = global_location
+	$TownMesh.global_scale(Vector3(2, 2, 2))
+
+	$Floor.size = scalar * 72
+	$Floor.town = $TownMesh
+	$Floor.town_aabb = $TownMesh/TownMesh.get_aabb()
+	$Floor.generate_mesh()
 
 	for i in range(map_size):
 		mid_matrix.append([])
@@ -79,11 +87,18 @@ func add_tile(i, j):
 
 	var g = Vector3(-1 + i * map_to_road_ratio, 0, -1 + j * map_to_road_ratio)
 
-	road_grid.set_cell_item(g.x, g.y, g.z, middle_road)
+	if town_center.x == i and town_center.y == j:
+		print("TOWN CENTER", i, j)
+		return
+
+	createIntersection(g)
 
 func calculate_roads():
 	for i in range(map_size):
 		for j in range(map_size):
+			if town_center.x == i and town_center.y == j:
+				print("TOWN CENTER", i, j)
+				continue
 			set_tile_roads(i, j)
 
 	unset_houses = houses
@@ -161,6 +176,26 @@ func createStreet(road_position: Vector3, scalars: Vector2, house_locations: Arr
 			randi() % house_scenes.size(),
 			location.z)
 
+func createIntersection(position: Vector3):
+	var grid_location = road_grid.map_to_world(position.x, position.y + 10, position.z)
+	var global_location = road_grid.to_global(grid_location)
+
+	var road_instance = road1.instance()
+	road_instance.translation = global_location
+	road_instance.rotate_y(PI / 2)
+
+	add_child(road_instance)
+	road_instance.set_position()
+	var center = road_instance.get_node("Center")
+	center.visible = true
+	roads.append(road_instance)
+
+	var road2_instance = road1.instance()
+	road2_instance.translation = global_location
+
+	add_child(road2_instance)
+	road2_instance.set_position()
+	roads.append(road2_instance)
 
 func createRoad(road_position: Vector3, x_scalar: int, z_scalar: int, road_piece: int):
 
@@ -175,6 +210,7 @@ func createRoad(road_position: Vector3, x_scalar: int, z_scalar: int, road_piece
 		road_instance.rotate_y(PI / 2)
 
 	add_child(road_instance)
+	road_instance.set_position()
 	roads.append(road_instance)
 
 func createHouse(x, z, house_index, angle):
@@ -188,60 +224,5 @@ func createHouse(x, z, house_index, angle):
 	house_instance.rotate_y(angle)
 
 	add_child(house_instance)
+	house_instance.set_position()
 	houses.append(house_instance)
-
-
-func _physics_process(_delta):
-	raycast_houses()
-	raycast_roads()
-		
-
-func raycast_houses():
-	if unset_houses.size() == 0 or prev_unset_houses == unset_houses.size():
-		for house in unset_houses:
-			house.visible = false
-			for child in house.get_children():
-				if child is StaticBody:
-					child.collision_layer = 0
-					child.collision_mask = 0
-		
-		unset_houses.clear()
-
-		return
-
-	print("HOUSES UNSET ", unset_houses.size())
-	prev_unset_houses = unset_houses.size()
-	var i = 0
-	var j = 0
-	while i < unset_houses.size():
-		i += 1
-
-		var house = unset_houses[j]
-
-		house.set_position()
-
-		if house.position_set:
-			unset_houses.remove(j)
-		else:
-			j += 1
-	
-func raycast_roads():
-	if unset_roads.size() == 0:
-		return
-
-	print("ROADS UNSET ", unset_roads.size())
-	prev_unset_roads = unset_roads.size()
-	var i = 0
-	var j = 0
-	while i < unset_roads.size():
-		i += 1
-
-		var road = unset_roads[j]
-
-		road.set_position()
-
-		if road.position_set:
-			unset_roads.remove(j)
-		else:
-			j += 1
-			

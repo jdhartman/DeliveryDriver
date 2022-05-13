@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_color = Color( 0.0156863, 0.00392157, 0.00392157, 1 )
+
+[node name="CSGPolygon" type="CSGPolygon"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00299072, 0.0331073, 0.0127945 )
+snap = 0.704
+polygon = PoolVector2Array( -4, 0, -4, 0.5, 4, 0.5, 4, 0 )
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 1
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 1
+path_local = true
+path_continuous_u = false
+path_u_distance = 1.0
+path_joined = false
+material = SubResource( 2 )

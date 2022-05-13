@@ -21,14 +21,18 @@ func _ready():
 		
 	
 func set_position():
-	$RayCast.cast_to = Vector3(0, -1000, 0)
+	var origin = global_transform.origin
 
-	if not $RayCast or not $RayCast.is_colliding() or position_set:
+	var space_state = get_world().direct_space_state
+	var result = space_state.intersect_ray(origin, origin + Vector3.DOWN * 4096)
+	
+	if not result:
+		visible = false
+		print("NOT COLLIDING HOUSE")
 		return
 	
-	var c = $RayCast.get_collision_point()
-	var n = $RayCast.get_collision_normal()
-	$RayCast.enabled = false
+	var c = result.position
+	var n = result.normal
 
 	global_transform.origin = c
 	global_transform = align_with_y(global_transform, n)

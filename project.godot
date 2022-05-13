@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Spatial",
+"class": "BoneHandle",
+"language": "GDScript",
+"path": "res://addons/bone_editor/BoneHandle.gd"
+} ]
+_global_script_class_icons={
+"BoneHandle": ""
+}
+
 [application]
 
 config/name="Delivery Driver"
@@ -20,7 +30,7 @@ window/size/height=1080
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/scatter/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/bone_editor/plugin.cfg", "res://addons/scatter/plugin.cfg" )
 
 [global]
 

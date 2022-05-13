@@ -1,68 +1,54 @@
+tool
 extends Spatial
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
+enum ROAD_TYPE {ROAD, INTERSECTION}
 
-var positions_set = [false, false, false]
 var position_set = false
+export var segment_size = 8
+export var number_of_segments = 4
+export(ROAD_TYPE) var road_type = ROAD_TYPE.ROAD
+
+func _ready():
+	if road_type == ROAD_TYPE.ROAD:
+		add_road_points()
+	elif road_type == ROAD_TYPE.INTERSECTION:
+		add_intersection_points()
+
+func add_road_points():
+	$Path.transform.origin = Vector3(-(segment_size * number_of_segments) / 2, 0, 0)
+	$Path.curve.clear_points()
+	$Path.curve = Curve3D.new()
+	
+	for i in range(number_of_segments + 1):
+		$Path.curve.add_point(Vector3(segment_size * i, 0, 0))
+
+func add_intersection_points():
+	$Path.transform.origin = Vector3(0, 0, 0)
+	$Path.curve.clear_points()
+	$Path.curve = Curve3D.new()
 
 func set_position():
-	if position_set:
-		print("ALREADY SET")
-		return
-
-	var skel = $straight_road/Armature/Skeleton
-	var road1_tip = skel.find_bone("Bone.001")
-
-	var t = skel.get_bone_global_pose(road1_tip)
-	var tip_origin = skel.to_global(t.origin)
-
-	var rayCast = $RayCast
-
-	rayCast.cast_to = Vector3(0, -1000, 0)
-
-	if not rayCast or not rayCast.is_colliding():
-		print(road, rayCast.is_colliding())
-		return
-	
-	var c = rayCast.get_collision_point()
-	var n = rayCast.get_collision_normal()
-	rayCast.enabled = false
-
-	road.global_transform.origin = c
-	road.global_transform = align_with_y(road.global_transform, n)
-	
-	#set_section_position($Road, 0)
-	set_section_position($Road2, 1)
-	#set_section_position($Road3, 2)
+	for i in range(number_of_segments + 1):
+		set_section_position(i)
 
 	position_set = true
-	
-func align_with_y(xform, new_y):
-	xform.basis.y = new_y.normalized()
-	xform.basis.x = -xform.basis.z.cross(new_y).normalized()
-	xform.basis = xform.basis.orthonormalized()
-	return xform	
 
-func set_section_position(road, index: int):
-	if positions_set[index]:
-		print("ALREADY SET")
-		return
+func set_section_position(index: int):
 
-	var rayCast = road.get_node("RayCast")
+	var local = Vector3(segment_size * index, 0, 0)
+	var p = $Path.to_global(local)
+	var space_state = get_world().direct_space_state
+	var result = space_state.intersect_ray(p, p + Vector3.DOWN * 4096)
 
-	rayCast.cast_to = Vector3(0, -1000, 0)
-
-	if not rayCast or not rayCast.is_colliding():
-		print(road, rayCast.is_colliding())
+	if not result:
+		$Path.curve.remove_point(index)
+		print("NOT COLLIDING")
 		return
 	
-	var c = rayCast.get_collision_point()
-	var n = rayCast.get_collision_normal()
-	rayCast.enabled = false
+	var c = result.position
 
-	road.global_transform.origin = c
-	road.global_transform = align_with_y(road.global_transform, n)
+	if index == number_of_segments / 2:
+		$Center.global_transform.origin = c
 
-	position_set = true
+	var l = $Path.to_local(c)
+	$Path.curve.set_point_position(index, l)
