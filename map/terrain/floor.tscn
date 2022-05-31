@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://default_env.tres" type="Environment" id=1]
 [ext_resource path="res://addons/scatter/src/core/scatter.gd" type="Script" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://map/foliage/textures/tree_texture1.tres" type="Material" id=8]
 [ext_resource path="res://map/foliage/textures/tree_texture1.png" type="Texture" id=9]
 [ext_resource path="res://roads/up_down_road.tscn" type="PackedScene" id=10]
+[ext_resource path="res://map/terrain/grass_texture.tres" type="Material" id=11]
 
 [sub_resource type="SpatialMaterial" id=19]
 albedo_color = Color( 0.34902, 0.647059, 0.396078, 1 )
@@ -70,7 +71,7 @@ _data = {
 [node name="Spatial" type="Spatial"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.140045, 0.221321, 0.296112 )
 script = ExtResource( 3 )
-material = SubResource( 19 )
+material = ExtResource( 11 )
 period = 160.0
 noise_height = 15
 size = 360
@@ -118,7 +119,8 @@ modifier_stack = Object(Node,"_import_path":NodePath(""),"pause_mode":0,"process
 , Object(Node,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"script":Resource( "res://addons/scatter/src/modifiers/randomize_transforms.gd" ),"enabled":true,"display_name":"Randomize Transforms","category":"Edit","warning":"","warning_ignore_no_transforms":false,"warning_ignore_no_path":true,"override_global_seed":false,"custom_seed":0,"local_space":true,"position":Vector3( 0.1, 0.1, 0.1 ),"rotation":Vector3( 5, 360, 5 ),"scale":Vector3( 1, 1, 1 ),"_rng":Object(RandomNumberGenerator,"seed":2907633106305164943,"state":-3430005525834777918,"script":null)
 )
 , Object(Node,"_import_path":NodePath(""),"pause_mode":0,"process_priority":0,"script":Resource( "res://addons/scatter/src/modifiers/project_on_floor.gd" ),"enabled":true,"display_name":"Project On Floor","category":"Edit","warning":"","warning_ignore_no_transforms":false,"warning_ignore_no_path":true,"ray_length":10.0,"ray_offset":1.0,"remove_points_on_miss":true,"align_with_floor_normal":true,"invert_ray_direction":false,"floor_direction":Vector3( 0, -1, 0 ),"max_slope":1.0,"mask":"1048575")
- ],"just_created":false,"undo_redo":null)
+ ],"just_created":false,"undo_redo":Object(UndoRedo,"script":null)
+)
 
 
 [node name="ScatterItem" type="Spatial" parent="Trees"]

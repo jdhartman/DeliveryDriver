@@ -15,6 +15,7 @@ onready var intersection = preload("res://roads/intersection.tscn")
 
 onready var delivery_tracker = get_node("../DeliveryTracker")
 onready var mini_map = get_node("../MiniMap")
+onready var car = get_node("../Car")
 
 export var map_size = 2
 export var tile_size = 6
@@ -54,16 +55,23 @@ func _ready():
 
 	town_center = Vector2((randi() % (map_size - 1)) + 1, (randi() % (map_size - 1)) + 1)
 	print(town_center)
-	var grid_location = road_grid.map_to_world(-1 + town_center.x * map_to_road_ratio, 0, -1 + town_center.y * map_to_road_ratio)
+	var grid_location = road_grid.map_to_world(2 + town_center.x * map_to_road_ratio, 0, 2 + town_center.y * map_to_road_ratio)
 	var global_location = road_grid.to_global(grid_location)
 
 	$TownMesh.global_transform.origin = global_location
-	$TownMesh.global_scale(Vector3(2, 2, 2))
+	$TownMesh.global_scale(Vector3(tile_size * 2, 2, tile_size * 2))
+
+	if car:
+		var car_position = global_location
+		car_position.y += 10
+		#car.global_transform.origin = car_position
 
 	$Floor.size = scalar * 72
 	$Floor.town = $TownMesh
 	$Floor.town_aabb = $TownMesh/TownMesh.get_aabb()
 	$Floor.generate_mesh()
+
+
 
 	for i in range(map_size):
 		mid_matrix.append([])
@@ -82,12 +90,12 @@ func _ready():
 	
 func add_tile(i, j):
 
-	var middle_road = 7#randi() % 16
+	var middle_road = 7
 	mid_matrix[i].append(middle_road)
 
 	var g = Vector3(-1 + i * map_to_road_ratio, 0, -1 + j * map_to_road_ratio)
 
-	if town_center.x == i and town_center.y == j:
+	if is_in_town(i, j):
 		print("TOWN CENTER", i, j)
 		return
 
@@ -96,13 +104,20 @@ func add_tile(i, j):
 func calculate_roads():
 	for i in range(map_size):
 		for j in range(map_size):
-			if town_center.x == i and town_center.y == j:
+			
+			if is_in_town(i, j):
 				print("TOWN CENTER", i, j)
 				continue
 			set_tile_roads(i, j)
 
 	unset_houses = houses
 	unset_roads = roads
+
+func is_in_town(i: int, j: int) -> bool:
+	var x_intown = town_center.x > 0 and town_center.x > i - 2 and town_center.x <= i
+	var y_intown = town_center.y > 0 and town_center.y > j - 2 and town_center.y <= j
+
+	return x_intown and y_intown
 
 func set_tile_roads(i, j):
 	var m = mid_matrix[i][j]

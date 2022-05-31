@@ -18,7 +18,7 @@ var town: Spatial
 
 func _ready():
 	map_seed = randi()
-	
+	generate_mesh()
 	
 func generate_mesh():
 	print($StaticBody/CollisionShape)
@@ -39,9 +39,9 @@ func generate_mesh():
 
 	for i in range(mdt.get_vertex_count()):
 		var vertex = mdt.get_vertex(i)
-		var v = to_global(vertex)
-		if not town_aabb.has_point(town.to_local(v)):
-			vertex.y = sn.get_noise_3dv(vertex) * noise_height
+		#var v = to_global(vertex)
+		#if not town_aabb.has_point(town.to_local(v)):
+			#vertex.y = sn.get_noise_3dv(vertex) * noise_height
 		mdt.set_vertex(i, vertex)
 	
 	generate_normals()
@@ -52,7 +52,7 @@ func generate_mesh():
 	mdt.commit_to_surface(array_plane)
 	
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	st.set_material(material)
+	st.set_material(generate_voronoi())
 	st.add_smooth_group(true)
 	st.append_from(array_plane, 0, Transform.IDENTITY)
 	
@@ -114,6 +114,46 @@ func generate_normals():
 		var v = mdt.get_vertex_normal(i).normalized()
 		mdt.set_vertex_normal(i, v)
 		mdt.set_vertex_color(i, Color(v.x, v.y, v.z))	
+
+func generate_voronoi() -> Material: 
+	
+	var img = Image.new()
+	img.create(24, 24, false, Image.FORMAT_RGBH)
+
+	var points = []
+	var colors = []
+
+	for _i in range(15):
+		points.push_back(Vector2(int(randf()*img.get_size().x), int(randf()*img.get_size().y)))
+		
+		randomize()
+		colors.push_back(Color(randf(), randf(), randf()))	
+		
+	for y in range(img.get_size().y):
+		for x in range(img.get_size().x):
+			var dmin = img.get_size().length()
+			var j = -1
+			for i in range(points.size()):
+				var d = abs(points[i].x - x) + abs(points[i].y - y)
+					
+				if d < dmin:
+					dmin = d
+					j = i
+			img.lock()
+			img.set_pixel(x, y, colors[j])
+			img.unlock()
+
+	for i in range(points.size()):
+		img.lock()
+		#img.set_pixel(points[i].x, points[i].y, Color.white)
+		img.unlock()
+
+	var texture = ImageTexture.new()
+	texture.create_from_image(img, ImageTexture.FLAG_MIPMAPS)
+	var new_material = material
+	new_material.set_texture(0, texture)
+
+	return new_material
 	
 func draw_normals(array_plane):
 	var error = mdt.create_from_surface(array_plane, 0)
