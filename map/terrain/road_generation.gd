@@ -16,6 +16,9 @@ var road_set = false
 var town_aabb: AABB
 var town: Spatial
 
+var cell_matrix: Array
+var road_matrix: Array
+
 func _ready():
 	map_seed = randi()
 	generate_mesh()
@@ -57,6 +60,8 @@ func generate_mesh():
 	st.append_from(array_plane, 0, Transform.IDENTITY)
 	
 	$StaticBody/FloorMesh.mesh = st.commit()
+	
+	find_cell_boundaries()
 
 	var col_shape = ConcavePolygonShape.new()
 	col_shape.set_faces($StaticBody/FloorMesh.mesh.get_faces())
@@ -122,14 +127,20 @@ func generate_voronoi() -> Material:
 
 	var points = []
 	var colors = []
+	
+	cell_matrix = []
+	road_matrix = []
 
 	for _i in range(15):
 		points.push_back(Vector2(int(randf()*img.get_size().x), int(randf()*img.get_size().y)))
 		
 		randomize()
-		colors.push_back(Color(randf(), randf(), randf()))	
+		colors.push_back(Color(randf(), randf(), randf()))
 		
 	for y in range(img.get_size().y):
+		cell_matrix.append([])
+		road_matrix.append([])
+		
 		for x in range(img.get_size().x):
 			var dmin = img.get_size().length()
 			var j = -1
@@ -141,19 +152,56 @@ func generate_voronoi() -> Material:
 					j = i
 			img.lock()
 			img.set_pixel(x, y, colors[j])
+			cell_matrix[y].append(j)
 			img.unlock()
-
-	for i in range(points.size()):
-		img.lock()
-		#img.set_pixel(points[i].x, points[i].y, Color.white)
-		img.unlock()
 
 	var texture = ImageTexture.new()
 	texture.create_from_image(img, ImageTexture.FLAG_MIPMAPS)
 	var new_material = material
 	new_material.set_texture(0, texture)
+	
+	print(cell_matrix)
 
 	return new_material
+	
+func find_cell_boundaries():
+	for n in $RoadParent.get_children():
+		$RoadParent.remove_child(n)
+		n.queue_free()
+	
+	for x in range(cell_matrix.size()):
+		for y in range(cell_matrix[x].size()):
+			var x_diff = x < cell_matrix.size() - 1 and cell_matrix[x][y] != cell_matrix[x + 1][y] 
+			var y_diff = y < cell_matrix.size() - 1 and cell_matrix[x][y] != cell_matrix[x][y + 1]
+			
+			var x_and_y_diff = y < cell_matrix.size() - 1 and x < cell_matrix.size() - 1 and cell_matrix[x][y] != cell_matrix[x + 1][y + 1]
+			
+			var bad_corner = x_diff and not y_diff and not x_and_y_diff
+			
+			var place_marker = (x_diff or y_diff) and not bad_corner
+			
+			if place_marker:
+				place_cell_marker(y, x)
+			
+			road_matrix[x].append(place_marker)	
+				
+	$RoadParent.road_matrix = road_matrix
+	$RoadParent._update(true)
+	
+func place_cell_marker(x, y):
+	var cell_size = size / 24
+	
+	var pos = CSGBox.new()
+	pos.name = "Road %d %d" % [y, x]
+	
+	var pos_x = x * cell_size + (cell_size - size) / 2
+	var pos_y =  y * cell_size + (cell_size - size) / 2
+	pos.global_transform.origin = Vector3(pos_x, 10, pos_y)
+	pos.width = cell_size
+	pos.depth = cell_size
+	
+	$RoadParent.add_child(pos)
+	pos.owner = get_tree().edited_scene_root
 	
 func draw_normals(array_plane):
 	var error = mdt.create_from_surface(array_plane, 0)
