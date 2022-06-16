@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/player_marker.png-432db7ecb4b387072467d40fbcb768b0.s3tc.stex"
-path.etc2="res://.import/player_marker.png-432db7ecb4b387072467d40fbcb768b0.etc2.stex"
+path.s3tc="res://.import/road_texture.jpg-601de8c3d10798b3db05ebe483356aeb.s3tc.stex"
+path.etc2="res://.import/road_texture.jpg-601de8c3d10798b3db05ebe483356aeb.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://ui/icons/player_marker.png"
-dest_files=[ "res://.import/player_marker.png-432db7ecb4b387072467d40fbcb768b0.s3tc.stex", "res://.import/player_marker.png-432db7ecb4b387072467d40fbcb768b0.etc2.stex" ]
+source_file="res://map/terrain/road_texture.jpg"
+dest_files=[ "res://.import/road_texture.jpg-601de8c3d10798b3db05ebe483356aeb.s3tc.stex", "res://.import/road_texture.jpg-601de8c3d10798b3db05ebe483356aeb.etc2.stex" ]
 
 [params]
 
@@ -21,7 +21,7 @@ compress/lossy_quality=0.7
 compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
-flags/repeat=1
+flags/repeat=true
 flags/filter=true
 flags/mipmaps=true
 flags/anisotropic=false

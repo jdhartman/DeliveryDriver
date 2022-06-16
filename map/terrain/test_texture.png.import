@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/player_marker.png-432db7ecb4b387072467d40fbcb768b0.s3tc.stex"
-path.etc2="res://.import/player_marker.png-432db7ecb4b387072467d40fbcb768b0.etc2.stex"
+path.s3tc="res://.import/test_texture.png-1b929351855bfefc25f4a120c1c11bdb.s3tc.stex"
+path.etc2="res://.import/test_texture.png-1b929351855bfefc25f4a120c1c11bdb.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://ui/icons/player_marker.png"
-dest_files=[ "res://.import/player_marker.png-432db7ecb4b387072467d40fbcb768b0.s3tc.stex", "res://.import/player_marker.png-432db7ecb4b387072467d40fbcb768b0.etc2.stex" ]
+source_file="res://map/terrain/test_texture.png"
+dest_files=[ "res://.import/test_texture.png-1b929351855bfefc25f4a120c1c11bdb.s3tc.stex", "res://.import/test_texture.png-1b929351855bfefc25f4a120c1c11bdb.etc2.stex" ]
 
 [params]
 

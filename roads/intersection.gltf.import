@@ -2,11 +2,13 @@
 
 importer="scene"
 type="PackedScene"
-valid=false
+path="res://.import/intersection.gltf-a7fafcbcff8e5a41698d58ec7e1347ec.scn"
 
 [deps]
 
 source_file="res://roads/intersection.gltf"
+dest_files=[ "res://.import/intersection.gltf-a7fafcbcff8e5a41698d58ec7e1347ec.scn" ]
+
 [params]
 
 nodes/root_type="Spatial"

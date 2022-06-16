@@ -123,7 +123,7 @@ func generate_normals():
 func generate_voronoi() -> Material: 
 	
 	var img = Image.new()
-	img.create(24, 24, false, Image.FORMAT_RGBH)
+	img.create(subdivide, subdivide, false, Image.FORMAT_RGBH)
 
 	var points = []
 	var colors = []
@@ -166,6 +166,9 @@ func generate_voronoi() -> Material:
 	
 func find_cell_boundaries():
 	for n in $RoadParent.get_children():
+		if n.name == "MeshInstance":
+			continue
+
 		$RoadParent.remove_child(n)
 		n.queue_free()
 	
@@ -185,6 +188,9 @@ func find_cell_boundaries():
 			
 			road_matrix[x].append(place_marker)	
 				
+	$RoadParent.map_size = size
+	$RoadParent.cell_size = size / 24
+	print("CELL SIZE: ", $RoadParent.cell_size)
 	$RoadParent.road_matrix = road_matrix
 	$RoadParent._update(true)
 	
