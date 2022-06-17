@@ -9,6 +9,8 @@ var map_seed = 0
 export (SpatialMaterial) var material
 export var period = 0.7
 export var noise_height = 20
+export var cells = 15
+var cell_size: float
 export var size = 2 
 export var subdivide = 6
 
@@ -18,25 +20,92 @@ var town: Spatial
 
 var cell_matrix: Array
 var road_matrix: Array
+var colors: Array
 
 func _ready():
 	map_seed = randi()
+	
+	cell_size = float(size) / subdivide
 	generate_mesh()
 	
 func generate_mesh():
 	print($StaticBody/CollisionShape)
 	$DebugNormals.clear()
 
-	var plane_mesh = PlaneMesh.new()
-	plane_mesh.size = Vector2(size, size)
-	plane_mesh.subdivide_depth = subdivide
-	plane_mesh.subdivide_width = subdivide
+	#var plane_mesh = PlaneMesh.new()
+	#plane_mesh.size = Vector2(size, size)
+	#plane_mesh.subdivide_depth = subdivide
+	#plane_mesh.subdivide_width = subdivide
 
 	sn.period = period
 	sn.seed = map_seed
 
 	var array_plane = ArrayMesh.new()
-	array_plane.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, plane_mesh.get_mesh_arrays())
+	generate_voronoi()
+	
+	find_cell_boundaries()
+	
+	var vertices = PoolVector3Array()
+	var color_vertices = PoolColorArray()
+	
+	print("ROAD MATRIX")
+	print(road_matrix)
+	
+	var d = cell_size
+	var angled_offset = sqrt(pow(d, 2)/2)
+
+	for x in range(cell_matrix.size()):
+		for y in range(cell_matrix[x].size()):
+			var x_offset = x * cell_size - float(size	) / 2
+			var y_offset = y * cell_size - float(size	) / 2
+			
+			var corner1 = x < cell_matrix.size() - 1 and y < cell_matrix.size() - 1 and road_matrix[x + 1][y] and road_matrix[x][y + 1]
+			var corner2 = x > 0 and y > 0 and road_matrix[x][y - 1] and road_matrix[x - 1][y]
+			
+			var corner3 = x > 0 and y < cell_matrix.size() - 1 and road_matrix[x - 1][y] and road_matrix[x][y + 1]
+			var corner4 = x < cell_matrix.size() - 1 and y > 0 and road_matrix[x][y - 1] and road_matrix[x + 1][y]
+			
+			if road_matrix[x][y] == true:
+				continue
+				
+			if corner1:
+				vertices.push_back(Vector3(y_offset, 0, x_offset))
+				vertices.push_back(Vector3(y_offset + cell_size, 0, x_offset))
+				vertices.push_back(Vector3(y_offset, 0, x_offset + cell_size))
+				
+				continue
+				
+			if corner2:
+				vertices.push_back(Vector3(y_offset + cell_size, 0, x_offset))
+				vertices.push_back(Vector3(y_offset + cell_size, 0, x_offset + cell_size))
+				vertices.push_back(Vector3(y_offset, 0, x_offset + cell_size))
+				
+				continue
+			
+			if not corner3:
+				if corner4:
+					vertices.push_back(Vector3(y_offset, 0, x_offset))
+					vertices.push_back(Vector3(y_offset + cell_size, 0, x_offset))
+					vertices.push_back(Vector3(y_offset, 0, x_offset + angled_offset))
+					
+					vertices.push_back(Vector3(y_offset, 0, x_offset + angled_offset))
+					vertices.push_back(Vector3(y_offset + cell_size, 0, x_offset))
+					vertices.push_back(Vector3(y_offset + cell_size, 0, x_offset + angled_offset + cell_size))
+				else:
+					vertices.push_back(Vector3(y_offset, 0, x_offset))
+					vertices.push_back(Vector3(y_offset + cell_size, 0, x_offset))
+					vertices.push_back(Vector3(y_offset + cell_size, 0, x_offset + cell_size))
+					
+			if not corner4:
+				vertices.push_back(Vector3(y_offset + cell_size, 0, x_offset + cell_size))
+				vertices.push_back(Vector3(y_offset, 0, x_offset + cell_size))
+				vertices.push_back(Vector3(y_offset, 0, x_offset))
+	
+	var arrays = []
+	arrays.resize(ArrayMesh.ARRAY_MAX)
+	arrays[ArrayMesh.ARRAY_VERTEX] = vertices
+	# Create the Mesh.
+	array_plane.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
 
 	var error = mdt.create_from_surface(array_plane, 0)
 
@@ -55,13 +124,11 @@ func generate_mesh():
 	mdt.commit_to_surface(array_plane)
 	
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	st.set_material(generate_voronoi())
+	st.set_material(material)
 	st.add_smooth_group(true)
 	st.append_from(array_plane, 0, Transform.IDENTITY)
 	
 	$StaticBody/FloorMesh.mesh = st.commit()
-	
-	find_cell_boundaries()
 
 	var col_shape = ConcavePolygonShape.new()
 	col_shape.set_faces($StaticBody/FloorMesh.mesh.get_faces())
@@ -120,18 +187,18 @@ func generate_normals():
 		mdt.set_vertex_normal(i, v)
 		mdt.set_vertex_color(i, Color(v.x, v.y, v.z))	
 
-func generate_voronoi() -> Material: 
+func generate_voronoi(): 
 	
 	var img = Image.new()
 	img.create(subdivide, subdivide, false, Image.FORMAT_RGBH)
 
 	var points = []
-	var colors = []
 	
 	cell_matrix = []
 	road_matrix = []
+	colors = []
 
-	for _i in range(15):
+	for _i in range(cells):
 		points.push_back(Vector2(int(randf()*img.get_size().x), int(randf()*img.get_size().y)))
 		
 		randomize()
@@ -157,12 +224,6 @@ func generate_voronoi() -> Material:
 
 	var texture = ImageTexture.new()
 	texture.create_from_image(img, ImageTexture.FLAG_MIPMAPS)
-	var new_material = material
-	new_material.set_texture(0, texture)
-	
-	print(cell_matrix)
-
-	return new_material
 	
 func find_cell_boundaries():
 	for n in $RoadParent.get_children():
@@ -179,7 +240,7 @@ func find_cell_boundaries():
 			
 			var x_and_y_diff = y < cell_matrix.size() - 1 and x < cell_matrix.size() - 1 and cell_matrix[x][y] != cell_matrix[x + 1][y + 1]
 			
-			var bad_corner = x_diff and not y_diff and not x_and_y_diff
+			var bad_corner = x_diff and y < cell_matrix.size() - 1 and not y_diff and not x_and_y_diff
 			
 			var place_marker = (x_diff or y_diff) and not bad_corner
 			
@@ -189,20 +250,20 @@ func find_cell_boundaries():
 			road_matrix[x].append(place_marker)	
 				
 	$RoadParent.map_size = size
-	$RoadParent.cell_size = size / 24
+	$RoadParent.cell_size = size / subdivide
 	print("CELL SIZE: ", $RoadParent.cell_size)
 	$RoadParent.road_matrix = road_matrix
-	$RoadParent._update(true)
+	#$RoadParent._update(true)
 	
 func place_cell_marker(x, y):
-	var cell_size = size / 24
+	var cell_size = float(size) / subdivide
 	
 	var pos = CSGBox.new()
-	pos.name = "Road %d %d" % [y, x]
+	pos.name = "Road %d %d" % [x, y]
 	
-	var pos_x = x * cell_size + (cell_size - size) / 2
-	var pos_y =  y * cell_size + (cell_size - size) / 2
-	pos.global_transform.origin = Vector3(pos_x, 10, pos_y)
+	var pos_x = x * cell_size + float(cell_size - size) / 2
+	var pos_y =  y * cell_size + float(cell_size - size) / 2
+	pos.global_transform.origin = Vector3(pos_x, 2, pos_y)
 	pos.width = cell_size
 	pos.depth = cell_size
 	

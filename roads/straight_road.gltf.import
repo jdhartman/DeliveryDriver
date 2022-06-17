@@ -2,13 +2,11 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/straight_road.gltf-04a9084c7a6c9983208f1d241691e500.scn"
+valid=false
 
 [deps]
 
 source_file="res://roads/straight_road.gltf"
-dest_files=[ "res://.import/straight_road.gltf-04a9084c7a6c9983208f1d241691e500.scn" ]
-
 [params]
 
 nodes/root_type="Spatial"
